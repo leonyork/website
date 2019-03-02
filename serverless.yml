@@ -6,8 +6,9 @@ service: users
 provider:
   name: aws
   runtime: nodejs8.10
+  memorySize: 128
   environment:
-    USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
+    USERS_TABLE: ${self:service}-${opt:stage, self:provider.stage}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -19,6 +20,10 @@ plugins:
   - serverless-webpack
   - serverless-dynamodb-local
   - serverless-offline
+
+#Package individually so that each function is smaller (i.e. tiny bit quicker startup!!!)
+package:
+  individually: true
 
 functions:
   - get:

@@ -6,9 +6,10 @@
     "author": "Leon York",
     "license": "MIT",
     "devDependencies": {
-        "aws-sdk": "^2.411.0",
+        "acorn": "^6.1.1",
+        "aws-sdk": "^2.413.0",
         "serverless-dynamodb-local": "^0.2.36",
-        "serverless-offline": "^4.7.0",
+        "serverless-offline": "^4.7.1",
         "serverless-webpack": "^5.2.0",
         "webpack": "^4.29.6"
     }

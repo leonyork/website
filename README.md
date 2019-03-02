@@ -30,4 +30,7 @@ curl -X GET http://localhost:3000/user/100
 ```
 
 ## Deploy
-`sls deploy`
+
+To deploy development run `sls deploy`
+
+To deploy production run `sls deploy -s production`
