@@ -1,0 +1,60 @@
+# For full config options, check the docs:
+#    docs.serverless.com
+
+service: users
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  environment:
+    USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}"
+
+plugins:
+  - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-offline
+
+functions:
+  - get:
+      handler: src/handlers/user/get.handler
+      events:
+        - http: get /user/{id}
+  - put:
+      handler: src/handlers/user/put.handler
+      events:
+        - http: put /user/{id}
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.USERS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+custom:
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: false
+  webpack:
+    includeModules:
+      forceExclude:
+        - aws-sdk
