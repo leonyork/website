@@ -46,3 +46,9 @@ In the `.test.` files alongside the source. Run with `npm run unit`
 ### Integration Tests
 
 In the `test/integration` folder. Run with `npm run integration`
+
+## CI/CD
+
+Uses [LambCI](https://github.com/lambci/lambci) to build on a push to GitHub. As part of the build, we'll run the tests against a functions and database created in the cloud.
+
+If all is successful, deploys to production

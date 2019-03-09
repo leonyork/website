@@ -12,7 +12,6 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:ListTables
         - dynamodb:GetItem
         - dynamodb:PutItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}"
@@ -21,6 +20,7 @@ plugins:
   - serverless-webpack
   - serverless-dynamodb-local
   - serverless-offline
+  - serverless-stack-output
 
 #Package individually so that each function is smaller (i.e. tiny bit quicker startup!!!)
 package:
@@ -53,9 +53,10 @@ resources:
           WriteCapacityUnits: 1
 
 custom:
+  output:
+    handler: scripts/write-test-script.handler
+    file: stack.toml
   dynamodb:
-    stages:
-      - dev
     start:
       port: 8000
       inMemory: true

@@ -2,6 +2,8 @@ const request = require('supertest');
 
 if (!process.env.TEST_URL) {
     require('./helper/severless-offline');
+} else {
+    jest.setTimeout(10000);
 }
 const requestUserApi = () => request(process.env.TEST_URL);
 
