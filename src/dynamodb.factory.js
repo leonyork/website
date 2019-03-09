@@ -1,14 +1,14 @@
 'use strict';
 const AWS = require('aws-sdk');
 
-let options = {};
+let options = {}
 
-// connect to local DB if running offline
+console.log(`Is Offline: ${process.env.IS_OFFLINE}`);
 if (process.env.IS_OFFLINE) {
     options = {
         region: 'localhost',
         endpoint: 'http://localhost:8000',
-    };
+    }
 }
 
-module.exports = new AWS.DynamoDB.DocumentClient();
+module.exports = new AWS.DynamoDB.DocumentClient(options);

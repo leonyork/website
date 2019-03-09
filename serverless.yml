@@ -12,6 +12,7 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
+        - dynamodb:ListTables
         - dynamodb:GetItem
         - dynamodb:PutItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}"
@@ -58,7 +59,7 @@ custom:
     start:
       port: 8000
       inMemory: true
-      migrate: false
+      migrate: true
   webpack:
     includeModules:
       forceExclude:

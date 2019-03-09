@@ -34,3 +34,15 @@ curl -X GET http://localhost:3000/user/100
 To deploy development run `sls deploy`
 
 To deploy production run `sls deploy -s production`
+
+## Tests
+
+Run all tests with `npm run test`
+
+### Unit Tests
+
+In the `.test.` files alongside the source. Run with `npm run unit`
+
+### Integration Tests
+
+In the `test/integration` folder. Run with `npm run integration`

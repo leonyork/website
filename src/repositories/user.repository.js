@@ -10,6 +10,7 @@ class UserRepository {
     }
 
     async get(id) {
+        console.log(`Calling GET for id ${id}`)
         const params = this._createParamObject({
             Key: {
                 id

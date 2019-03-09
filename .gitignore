@@ -10,3 +10,7 @@ jspm_packages
 
 #OS
 .DS_Store
+
+#VS Code
+.nyc_output
+coverage

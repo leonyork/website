@@ -22,7 +22,7 @@ exports.handler = async(event, context) => {
             body: JSON.stringify(response.content),
         }
     } catch (err) {
-        if (!err.statusCode) { console.log(err); }
+        console.log(err);
         return {
             statusCode: err.statusCode || 500,
             body: JSON.stringify(err)

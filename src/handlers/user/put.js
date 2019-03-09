@@ -9,8 +9,6 @@ exports.handler = async(event, context) => {
     try {
         item = JSON.parse(event.body)
     } catch (err) {
-        console.log(`Unable to parse event ${JSON.stringify(event)}`);
-        console.log(err);
         return {
             statusCode: 400,
             body: { "message": "Body supplied is not JSON data" }
@@ -20,14 +18,14 @@ exports.handler = async(event, context) => {
         const response = await userRepository.put({ id: event.pathParameters.id, content: item });
         return {
             statusCode: response ? 200 : 201,
-            body: item,
+            body: JSON.stringify(item),
         };
     } catch (err) {
         console.log(`Error PUTting event ${JSON.stringify(event)}`);
-        if (!err.statusCode) { console.log(err); }
+        console.log(err);
         return {
             statusCode: err.statusCode || 500,
-            body: err
+            body: JSON.stringify(err)
         };
     }
 };
