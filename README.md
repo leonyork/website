@@ -1,4 +1,7 @@
 # User store API
+
+![Build status](https://s3.amazonaws.com/lambci-user-store-buildresults-15lloh32shdpg/gh/leonyork/user-store-api/branches/master/568b5107c2846bee412acb58ecd38215.svg)
+
 Provides an API for storing user data in dynamo db. Only provides a PUT and a GET to allow you to add/update and get a user. Data held against the user is any JSON.
 
 ### GET /user/{id}
@@ -51,4 +54,4 @@ In the `test/integration` folder. Run with `npm run integration`
 
 Uses [LambCI](https://github.com/lambci/lambci) to build on a push to GitHub. As part of the build, we'll run the tests against a functions and database created in the cloud.
 
-If all is successful, deploys to production
+If all is successful, deploys to production.
