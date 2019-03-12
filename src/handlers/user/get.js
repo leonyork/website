@@ -1,8 +1,8 @@
 'use strict';
 
 const { UserRepository } = require('../../repositories/user.repository');
-const dynamo = require('../../dynamodb.factory')
-const userRepository = new UserRepository(dynamo)
+const dynamo = require('../../dynamodb.factory');
+const userRepository = new UserRepository(dynamo);
 
 exports.handler = async(event, context) => {
     try {
@@ -19,7 +19,7 @@ exports.handler = async(event, context) => {
 
         return {
             statusCode: 200,
-            body: JSON.stringify(response.content),
+            body: JSON.stringify(response.content)
         }
     } catch (err) {
         console.log(err);

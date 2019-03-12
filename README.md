@@ -34,6 +34,20 @@ curl -X PUT http://localhost:3000/user/100 -d '{"name": "Bob"}'
 curl -X GET http://localhost:3000/user/100
 ```
 
+Note that if you get 
+
+```bash
+  Error --------------------------------------------------
+
+  Unable to start DynamoDB Local process!
+```
+
+You'll need to run
+
+```bash
+sls dynamodb install --localPath ./bin
+```
+
 ## Deploy
 
 To deploy development run `sls deploy`
