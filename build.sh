@@ -1,7 +1,8 @@
-
+set -e
 STAGE=test$(date +%s%N) 
 pip install awscli --upgrade --user 
 npm install 
+npm run unit
 #Serverless seems to not always run the post-deploy hooks to create the script, so just keep retrying in here
 rm scripts/generated/run-tests.sh
 while [ ! -f scripts/generated/run-tests.sh ]
