@@ -30,11 +30,15 @@ functions:
   - get:
       handler: src/handlers/user/get.handler
       events:
-        - http: get /user/{id}
+        - http: 
+            method: get 
+            path: /user/{id}
   - put:
       handler: src/handlers/user/put.handler
       events:
-        - http: put /user/{id}
+        - http: 
+            method: put
+            path: /user/{id}
 
 resources:
   Resources:
@@ -55,7 +59,6 @@ resources:
 custom:
   output:
     handler: scripts/write-test-script.handler
-    file: stack.toml
   dynamodb:
     start:
       port: 8000
