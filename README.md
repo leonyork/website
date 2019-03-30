@@ -1,10 +1,12 @@
-# User store API
+# User store API (secured)
 
 ![Build status](https://s3.amazonaws.com/lambci-user-store-buildresults-15lloh32shdpg/gh/leonyork/user-store-api/branches/master/568b5107c2846bee412acb58ecd38215.svg)
 [![Maintainability](https://api.codeclimate.com/v1/badges/621ecfb4aa6b25344a37/maintainability)](https://codeclimate.com/github/leonyork/user-store-api/maintainability)
 [![Greenkeeper](https://badges.greenkeeper.io/leonyork/user-store-api.svg)](https://badges.greenkeeper.io/)
 
 Provides an API for storing user data in dynamo db. Only provides a PUT and a GET to allow you to add/update and get a user. Data held against the user is any JSON.
+
+The API is secured by checking the user is only getting or putting data for the subject that they have identified as.
 
 ### GET /user/{id}
  - If the user exists, responds with status code 200 and the information about the user

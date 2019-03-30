@@ -34,10 +34,11 @@ async function startSlsOffline() {
         slsOfflineProcess.stdout.on('data', (data) => {
             if (data.includes("Offline listening on")) {
                 const listeningLogging = data.toString().trim();
-                process.env.TEST_URL = listeningLogging.match(/(http|https)\:\/\/[a-zA-Z0-9]*\:[0-9]*$/g)[0];
-                console.log(`Serverless offline running on ${process.env.TEST_URL}`);
+                process.env.USER_STORE_API_SECURED_TEST_URL = listeningLogging.match(/(http|https)\:\/\/[a-zA-Z0-9]*\:[0-9]*$/g)[0];
+                console.log(`Serverless offline running on ${process.env.USER_STORE_API_SECURED_TEST_URL}`);
                 resolve();
             }
+            console.log(data.toString());
         });
 
         slsOfflineProcess.stderr.on('data', (errData) => {

@@ -5,6 +5,7 @@ const dynamo = require('../../dynamodb.factory')
 const userRepository = new UserRepository(dynamo)
 
 exports.handler = async(event, context) => {
+    console.log(event);
     let item;
     try {
         item = JSON.parse(event.body);

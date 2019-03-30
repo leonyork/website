@@ -16,3 +16,7 @@ jspm_packages
 coverage
 
 stack.toml
+
+.env
+
+build
