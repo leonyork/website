@@ -1,9 +1,8 @@
 'use strict';
 const AWS = require('aws-sdk');
 
-let options = {}
+let options = {};
 
-console.log(`Is Offline: ${process.env.IS_OFFLINE}`);
 if (process.env.IS_OFFLINE) {
     options = {
         region: 'localhost',
