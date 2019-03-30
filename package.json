@@ -9,7 +9,7 @@
         "test": "jest",
         "unit": "jest src",
         "integration": "jest test/integration",
-        "deploy": "serverless deploy",
+        "deploy": "serverless deploy --force",
         "remove": "serverless remove"
     },
     "devDependencies": {
