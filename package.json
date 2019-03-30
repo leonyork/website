@@ -10,7 +10,8 @@
         "unit": "jest src",
         "integration": "jest test/integration",
         "deploy": "serverless deploy --force",
-        "remove": "serverless remove"
+        "remove": "serverless remove",
+        "offline": "serverless offline start"
     },
     "devDependencies": {
         "acorn": "^6.1.1",

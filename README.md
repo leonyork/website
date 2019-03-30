@@ -22,7 +22,7 @@ You'll need to have [NPM](https://www.npmjs.com/) the [Serverless Framework](htt
 - Now run `npm install` to install the required packages for this application
 
 ## Local
-`sls offline start`
+`npm run offline`
 
 To test:
 
