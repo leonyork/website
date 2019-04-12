@@ -48,25 +48,19 @@ exports.handler = (event, context, callback) => {
     console.log(JSON.stringify(context));
     try {
         var token = event.authorizationToken.split(" ")[1];
-    } catch (err) {
-        return context.fail("No Authorization header with Bearer token provided");
-    }
+    } catch (err) { return context.fail("No Authorization header with Bearer token provided"); }
 
-    if (!token) {
-        return context.fail("No Authorization header with Bearer token provided");
-    }
+    if (!token) { return context.fail("No Authorization header with Bearer token provided"); }
 
     try {
         var keys = getJwksKeys();
-    } catch (err) {
-        return context.fail("Unable to get JWKS");
-    }
+    } catch (err) { return context.fail("Unable to get JWKS"); }
 
-    jwt.verify(token, keys, (err, decoded) => {
-        if (err) {
-            return context.fail("Invalid JWT");
-        }
+    try {
+        jwt.verify(token, keys, (err, decoded) => {
+            if (err) { throw err; }
 
-        callback(null, createPolicy(event, context, decoded.sub, "Allow"));
-    });
+            callback(null, createPolicy(event, context, decoded.sub, "Allow"));
+        });
+    } catch (err) { return context.fail("Invalid JWT"); }
 };
