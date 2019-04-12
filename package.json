@@ -18,6 +18,7 @@
         "aws-sdk": "^2.413.0",
         "jest": "^24.1.0",
         "serverless": "^1.38.0",
+        "serverless-dotenv-plugin": "^2.0.1",
         "serverless-dynamodb-local": "^0.2.36",
         "serverless-offline": "^4.7.1",
         "serverless-webpack": "^5.2.0",
