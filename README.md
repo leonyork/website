@@ -21,6 +21,12 @@ You'll need to have [NPM](https://www.npmjs.com/) the [Serverless Framework](htt
 - Once NPM is installed you can run `npm install -g serverless` to install the Serverless Framework
 - Now run `npm install` to install the required packages for this application
 
+## Environment variables
+
+When running locally or deploying to development environment variables will be loaded from .env.development. You can create this file based on .env.example
+
+For more information see https://www.npmjs.com/package/serverless-dotenv-plugin
+
 ## Local
 `npm run offline`
 
