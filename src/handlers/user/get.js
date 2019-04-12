@@ -2,9 +2,10 @@
 
 const { UserRepository } = require('../../repositories/user.repository');
 const dynamo = require('../../dynamodb.factory');
+const { cors } = require('../../cors')
 const userRepository = new UserRepository(dynamo);
 
-exports.handler = async(event, context) => {
+exports.handler = cors(async(event, context) => {
     try {
         const response = await userRepository.get(event.pathParameters.id);
         if (!response) {
@@ -28,4 +29,4 @@ exports.handler = async(event, context) => {
             body: JSON.stringify(err)
         }
     }
-};
+});
