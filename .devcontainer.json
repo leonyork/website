@@ -1,0 +1,6 @@
+{
+  "dockerComposeFile": "docker-compose-dev.yml",
+  "service": "dev",
+  "workspaceFolder": "/app",
+  "shutdownAction": "stopCompose"
+}
