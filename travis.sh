@@ -13,6 +13,7 @@ if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
   make build
 elif [ "${TRAVIS_BRANCH}" = "master" ]; then
   echo "Triggered on Commit/Merge/Schedule to branch: ${TRAVIS_BRANCH}"
+  mkdir -p ~/.aws
   echo -n $AWS_CREDENTIALS_FILE | base64 -d > ~/.aws/credentials
   make .deploy
 else
