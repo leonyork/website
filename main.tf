@@ -16,6 +16,17 @@ variable "build" {
 
 provider "aws" {
   region = "${var.region}"
+  shared_credentials_file = "~/.aws/credentials"
+}
+
+terraform {
+  backend "s3" {
+    bucket = "prod-leonyork-com-terraform"
+    key    = "terraform.tfstate"
+    region = "us-east-1"
+    encrypt = true
+    shared_credentials_file = "~/.aws/credentials"
+  }
 }
 
 resource "aws_s3_bucket" "b" {

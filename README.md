@@ -1,4 +1,8 @@
-# Next js SSG Project
+# Website
+
+[![Build Status](https://travis-ci.com/leonyork/website.svg?branch=master)](https://travis-ci.com/leonyork/website)
+
+Goto [leonyork.com](https://leonyork.com) to view.
 
 Everything is run in docker (using make to shorten commands). This means that development should work the same across OS's and versions of node, nginx, etc. are defined within the project
 
