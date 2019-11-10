@@ -30,6 +30,23 @@
 .dev-sh: .dev-build .dev-install
 	docker-compose -f docker-compose-dev.yml run --rm dev /bin/sh
 
+# Deploy to AWS
+.deploy:
+	docker-compose -f docker-compose-deploy.yml build
+	docker-compose -f docker-compose-deploy.yml run build
+	docker-compose -f docker-compose-deploy.yml run deploy
+
+# Remove all the resources created by deploying
+.destroy:
+	docker-compose -f docker-compose-deploy.yml run deploy destroy -auto-approve -input=false -force
+
+# sh into the container - useful for running commands like import
+.deploy-sh:
+	docker-compose -f docker-compose-deploy.yml build
+	docker-compose -f docker-compose-deploy.yml run build
+	docker-compose -f docker-compose-deploy.yml run --entrypoint /bin/sh deploy
+
+
 # Run the full build
 build:
 	docker-compose build
