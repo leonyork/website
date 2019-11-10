@@ -35,13 +35,6 @@ resource "aws_s3_bucket" "b" {
   force_destroy = true
 }
 
-resource "null_resource" "remove_and_upload_to_s3" {
-  depends_on = ["aws_s3_bucket.b"]
-  provisioner "local-exec" {
-    command = "aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id}"
-  }
-}
-
 locals {
   s3_origin_id = "${var.stage}-${var.service}-s3OriginId"
 }
@@ -166,23 +159,43 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     minimum_protocol_version = "TLSv1"
   }
 
-  aliases = [var.domain]
+  aliases = ["${var.domain}"]
 
   tags = {
       Name    = "${var.stage}-${var.service}"
-      Stage   = var.stage
-      Service = var.service
+      Stage   = "${var.stage}"
+      Service = "${var.service}"
   }
 }
 
 resource "aws_route53_record" "cdn-alias" {
   zone_id = "${aws_route53_zone.main.zone_id}"
-  name    = var.domain
+  name    = "${var.domain}"
   type    = "A"
 
   alias {
-    name                   = aws_cloudfront_distribution.s3_distribution.domain_name
-    zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
+    name                   = "${aws_cloudfront_distribution.s3_distribution.domain_name}"
+    zone_id                = "${aws_cloudfront_distribution.s3_distribution.hosted_zone_id}"
     evaluate_target_health = false
+  }
+}
+
+#Do this after the s3 distribution is applied so that we ensure we invalidate the distribution without having to recreate
+resource "null_resource" "remove_and_upload_to_s3" {
+  depends_on = ["aws_cloudfront_distribution.s3_distribution"]
+  #Ensure we run this build and deploy every time - even if the other resources didn't need to be changed - This is a known hack - see https://www.kecklers.com/terraform-null-resource-execute-every-time/ and https://github.com/hashicorp/terraform/pull/3244
+  triggers = {
+      build_number = "${timestamp()}"
+  }
+
+  # Always sync up index.html whether the size has changed or not. 
+  # For speed, don't sync up files that sizes haven't changed (e.g. static files that could be larger)
+  # Always invalidate the cloudfront cache, even if we've just created it - for simpleness
+  provisioner "local-exec" {
+    command = <<EOF
+    aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id} --region=${var.region} --size-only && \
+    aws s3 cp ${var.build}/index.html s3://${aws_s3_bucket.b.id}/index.html --region=${var.region} && \
+    aws cloudfront create-invalidation --distribution-id ${aws_cloudfront_distribution.s3_distribution.id} --paths /index.html --region=${var.region}
+    EOF
   }
 }
