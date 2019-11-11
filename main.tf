@@ -191,11 +191,13 @@ resource "null_resource" "remove_and_upload_to_s3" {
   # Always sync up index.html whether the size has changed or not. 
   # For speed, don't sync up files that sizes haven't changed (e.g. static files that could be larger)
   # Always invalidate the cloudfront cache, even if we've just created it - for simpleness
+  # Only delete after updating index.html and invalidating cloudfront so the new files definitely exist
   provisioner "local-exec" {
     command = <<EOF
     aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id} --region=${var.region} --size-only && \
     aws s3 cp ${var.build}/index.html s3://${aws_s3_bucket.b.id}/index.html --region=${var.region} && \
-    aws cloudfront create-invalidation --distribution-id ${aws_cloudfront_distribution.s3_distribution.id} --paths /index.html --region=${var.region}
+    aws cloudfront create-invalidation --distribution-id ${aws_cloudfront_distribution.s3_distribution.id} --paths /index.html --region=${var.region} && \
+    aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id} --region=${var.region} --size-only --delete
     EOF
   }
 }
