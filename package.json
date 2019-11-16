@@ -4,9 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"next dev\" \"tina-git-server 3001\"",
-    "build": "run-s build:next build:sitemap",
-    "build:next": "next build",
-    "build:sitemap": "node sitemap.js",
+    "build": "next build",
     "start": "next start"
   },
   "dependencies": {
@@ -26,8 +24,6 @@
     "next-fonts": "^0.19.0",
     "next-offline": "^4.0.6",
     "next-optimized-images": "^2.5.4",
-    "nextjs-sitemap-generator": "^0.3.3",
-    "npm-run-all": "^4.1.5",
     "prop-types": "^15.5.9",
     "purgecss-webpack-plugin": "^1.6.0",
     "react": "16.11.0",

@@ -5,19 +5,21 @@ services:
     build:
       context: .
       target: builder
+      args:
+        NODE_VERSION: ${NODE_VERSION} #Comes from .env file
     volumes:
       - out:/app/out-shared
     command: |
       sh -c " \
-        sed -i 's/http:\/\/localhost/https:\/\/leonyork.com/g' out/sitemap.xml
-        sed -i 's/http:\/\/localhost/https:\/\/leonyork.com/g' out/robots.txt
         rm -rf out-shared/* && \
         cp -rf out/* out-shared/"
   # This service MUST be run after the build service has completed 
   deploy:
     build: 
       context: .
-      dockerfile: deploy.Dockerfile
+      dockerfile: deploy.Dockerfile 
+      args:
+        TERRAFORM_VERSION: ${TERRAFORM_VERSION} #Comes from .env file
     entrypoint: 'sh -c ''terraform init -input=false && terraform $${0} "$$@" -var "build=out" -var "stage=prod"'''
     # Init and apply, specifying the directory to take the files from as /app/out
     command: "apply -input=false -auto-approve"

@@ -1,6 +1,10 @@
 version: '3.7'
 services:
   web:
-    build: .
+    build: 
+      context: .
+      args:
+        NODE_VERSION: ${NODE_VERSION} #Comes from .env file
+        NGINX_VERSION: ${NGINX_VERSION} #Comes from .env file
     ports:
       - "80:80"

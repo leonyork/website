@@ -1,14 +1,11 @@
-FROM node:12.13.0-alpine AS node
+ARG NODE_VERSION
+ARG NGINX_VERSION
+FROM node:${NODE_VERSION}-alpine AS node
 
-# Also exposing VSCode debug ports
-EXPOSE 8000 9929 9230
-
-RUN \
-  apk add --no-cache autoconf automake bash g++ git libtool libc6-compat libjpeg-turbo-dev libpng-dev make nasm python && \
-  apk add vips-dev fftw-dev --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community --repository http://dl-3.alpinelinux.org/alpine/edge/main && \
-  rm -fR /var/cache/apk/* && \
-  npm install -g yarn
-
+# Should match dev.Dockerfile so dev env is as close to build env as sensible
+COPY scripts/install/build.sh /install.sh
+RUN sh /install.sh && rm -rf /install.sh
+  
 WORKDIR /app
 
 FROM node AS builder
@@ -29,7 +26,7 @@ RUN yarn build
 ARG COMMAND="yarn run next export"
 RUN ${COMMAND}
 
-FROM nginx:1.17.5-alpine
+FROM nginx:${NGINX_VERSION}-alpine
 
 RUN \
   rm -rf /usr/share/nginx/html/* && \

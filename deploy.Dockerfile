@@ -1,11 +1,5 @@
-FROM hashicorp/terraform:0.12.13
+ARG TERRAFORM_VERSION
+FROM hashicorp/terraform:${TERRAFORM_VERSION}
 
-RUN apk add --no-cache \
-        python \
-        py-pip \
-        groff \
-        less \
-        mailcap \
-        && \
-    pip install --upgrade awscli==1.14.5 s3cmd==2.0.1 python-magic
-    
+COPY scripts/install/deploy.sh /install.sh
+RUN sh /install.sh && rm -rf /install.sh

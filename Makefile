@@ -1,18 +1,18 @@
 # Build the dev container
 .dev-build:
-	docker-compose -f docker-compose-dev.yml build
+	docker-compose -f dev.docker-compose.yml build
 
 # Remove node_modules
 .dev-clear:
-	docker-compose -f docker-compose-dev.yml down -v
+	docker-compose -f dev.docker-compose.yml down -v
 
 # Run an install in dev to populate node_modules
 .dev-install:
-	docker-compose -f docker-compose-dev.yml run --rm dev yarn install
+	docker-compose -f dev.docker-compose.yml run --rm dev yarn install
 
 # Command used to create the project initially. Creates a new project and moves it into the current directory
 .init: .dev-build .dev-clear
-	docker-compose -f docker-compose-dev.yml run --rm dev /bin/sh -c \
+	docker-compose -f dev.docker-compose.yml run --rm dev /bin/sh -c \
 		"echo project name: && \
 		read PROJECT_NAME && \
 		yarn create next-app \$$PROJECT_NAME && \
@@ -24,27 +24,30 @@
 
 # Run the project in development mode - i.e. hot reloading as you change the code.
 .dev: .dev-build .dev-install
-	docker-compose -f docker-compose-dev.yml up
+	docker-compose -f dev.docker-compose.yml up
 
 # sh into the dev container - useful for debugging or installing new dependencies (you should do this inside the container rather than on the host)
 .dev-sh: .dev-build .dev-install
-	docker-compose -f docker-compose-dev.yml run --rm dev /bin/sh
+	docker-compose -f dev.docker-compose.yml run --rm dev /bin/sh
+
+# Get the logs from the dev container
+
 
 # Deploy to AWS
 .deploy:
-	docker-compose -f docker-compose-deploy.yml build
-	docker-compose -f docker-compose-deploy.yml run build
-	docker-compose -f docker-compose-deploy.yml run deploy
+	docker-compose -f deploy.docker-compose.yml build
+	docker-compose -f deploy.docker-compose.yml run build
+	docker-compose -f deploy.docker-compose.yml run deploy
 
 # Remove all the resources created by deploying
 .destroy:
-	docker-compose -f docker-compose-deploy.yml run deploy destroy -auto-approve -input=false -force
+	docker-compose -f deploy.docker-compose.yml run deploy destroy -auto-approve -input=false -force
 
 # sh into the container - useful for running commands like import
 .deploy-sh:
-	docker-compose -f docker-compose-deploy.yml build
-	docker-compose -f docker-compose-deploy.yml run build
-	docker-compose -f docker-compose-deploy.yml run --entrypoint /bin/sh deploy
+	docker-compose -f deploy.docker-compose.yml build
+	docker-compose -f deploy.docker-compose.yml run build
+	docker-compose -f deploy.docker-compose.yml run --entrypoint /bin/sh deploy
 
 
 # Run the full build

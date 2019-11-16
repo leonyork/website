@@ -4,7 +4,6 @@ const withFonts = require("next-fonts")
 const glob = require("glob-all")
 const PurgecssPlugin = require("purgecss-webpack-plugin")
 const withOffline = require("next-offline")
-const path = require("path")
 
 const nextConfig = {
     webpack: (config) => {
@@ -26,6 +25,26 @@ const nextConfig = {
             })
         )
         return config
+    },
+
+    workboxOpts: {
+        globPatterns: ["public/**/*"],
+        globDirectory: ".",
+        modifyURLPrefix: {
+            "public/": "/",
+        },
+        runtimeCaching: [
+            {
+                urlPattern: /^https?.*/,
+                handler: "NetworkFirst",
+                options: {
+                    cacheName: "offlineCache",
+                    expiration: {
+                        maxEntries: 200
+                    }
+                }
+            }
+        ]
     }
 }
 

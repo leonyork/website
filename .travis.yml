@@ -6,4 +6,4 @@ branches:
 services:
   - docker
 script:
-  - bash travis.sh
+  - bash scripts/travis.sh
