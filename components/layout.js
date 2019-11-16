@@ -34,7 +34,9 @@ const Layout = (props) => {
         <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
         <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
         <link rel="icon" type="image/png" href="favicon-128.png" sizes="128x128" />
+        <link rel="manifest" href="/manifest.json"></link>
         <meta name="application-name" content="Leon York" />
+        <meta name="theme-color" content="#2C3E50" />
         <meta name="msapplication-TileColor" content="#2C3E50" />
         <meta name="msapplication-TileImage" content="/favicon/mstile-144x144.png" />
         <meta name="msapplication-square70x70logo" content="/favicon/mstile-70x70.png" />
