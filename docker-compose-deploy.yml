@@ -9,6 +9,8 @@ services:
       - out:/app/out-shared
     command: |
       sh -c " \
+        sed -i 's/http:\/\/localhost/https:\/\/leonyork.com/g' out/sitemap.xml
+        sed -i 's/http:\/\/localhost/https:\/\/leonyork.com/g' out/robots.txt
         rm -rf out-shared/* && \
         cp -rf out/* out-shared/"
   # This service MUST be run after the build service has completed 

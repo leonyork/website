@@ -50,7 +50,7 @@ export default function addCms(props) {
     },
 
     reset() {
-      return cms.api.git.reset({ files: [id] })
+      return cms.api.git.reset({ files: [props.fileRelativePath] })
     }
   })
 
