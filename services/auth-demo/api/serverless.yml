@@ -1,0 +1,76 @@
+# For full config options, check the docs:
+#    docs.serverless.com
+
+service: users
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  memorySize: 128
+  environment:
+    USERS_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    USER_STORE_API_SECURED_ISSUER: ${env:USER_STORE_API_SECURED_ISSUER}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.USERS_TABLE}"
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-offline
+
+#Package individually so that each function is smaller (i.e. tiny bit quicker startup!!!)
+package:
+  individually: true
+
+functions:
+  - get:
+      handler: src/handlers/user/get.handler
+      events:
+        - http: 
+            method: get 
+            path: /user/{id}
+            authorizer: authorizer
+  - put:
+      handler: src/handlers/user/put.handler
+      events:
+        - http: 
+            method: put
+            path: /user/{id}
+            authorizer: authorizer
+  - authorizer:
+      handler: src/handlers/authorizer/authorizer.handler
+      type: TOKEN
+      identitySource: method.request.header.Authorization
+      identityValidationExpression: Bearer (.*)
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.USERS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+custom:
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+  webpack:
+    includeModules:
+      forceExclude:
+        - aws-sdk

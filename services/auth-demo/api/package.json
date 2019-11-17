@@ -1,0 +1,33 @@
+{
+    "name": "user-store-api",
+    "version": "1.0.0",
+    "description": "Store information against an ID in dynamodb",
+    "keywords": [],
+    "author": "Leon York",
+    "license": "MIT",
+    "scripts": {
+        "test": "jest",
+        "unit": "jest src",
+        "integration": "jest test/integration",
+        "deploy": "serverless deploy --force",
+        "remove": "serverless remove",
+        "offline": "serverless offline start"
+    },
+    "devDependencies": {
+        "acorn": "^6.1.1",
+        "create-cert": "^1.0.6",
+        "jest": "^24.1.0",
+        "jwk-to-pem": "^2.0.1",
+        "serverless": "^1.38.0",
+        "serverless-dotenv-plugin": "^2.0.1",
+        "serverless-dynamodb-local": "^0.2.36",
+        "serverless-offline": "^4.7.1",
+        "serverless-webpack": "^5.2.0",
+        "supertest": "^4.0.0",
+        "tree-kill": "^1.2.1",
+        "webpack": "^4.29.6"
+    },
+    "dependencies": {
+        "jwks-rsa": "^1.4.0"
+    }
+}
