@@ -13,9 +13,13 @@ variable "domain" {
 variable "build" {
   default = "out"
 }
+variable "project_name" {
+  default = "leonyork-com-build-deploy"
+}
 
 provider "aws" {
   region = "${var.region}"
+  version = "~> 2.36"
   shared_credentials_file = "~/.aws/credentials"
 }
 
@@ -37,6 +41,7 @@ resource "aws_s3_bucket" "b" {
 
 locals {
   s3_origin_id = "${var.stage}-${var.service}-s3OriginId"
+  auth_demo_location = "https://${var.domain}/auth-demo"
 }
 
 resource "aws_cloudfront_origin_access_identity" "default" {
@@ -181,6 +186,7 @@ resource "aws_route53_record" "cdn-alias" {
 }
 
 #Do this after the s3 distribution is applied so that we ensure we invalidate the distribution without having to recreate
+#TODO: Work out how to destroy this
 resource "null_resource" "remove_and_upload_to_s3" {
   depends_on = ["aws_cloudfront_distribution.s3_distribution"]
   #Ensure we run this build and deploy every time - even if the other resources didn't need to be changed - This is a known hack - see https://www.kecklers.com/terraform-null-resource-execute-every-time/ and https://github.com/hashicorp/terraform/pull/3244
@@ -192,8 +198,15 @@ resource "null_resource" "remove_and_upload_to_s3" {
   # For speed, don't sync up files that sizes haven't changed (e.g. static files that could be larger)
   # Always invalidate the cloudfront cache, even if we've just created it - for simpleness
   # Only delete after updating index.html and invalidating cloudfront so the new files definitely exist
+  # TODO: Move to script
   provisioner "local-exec" {
     command = <<EOF
+    COGNITO_HOST=${module.auth_demo.cognito_host} \
+    CLIENT_ID=${module.auth_demo.user_pool_client_id} \
+    REDIRECT_URL=${local.auth_demo_location} \
+    USER_API_URL=${module.auth_demo.api_url} \
+    docker-compose -f deploy.docker-compose.yml -p "${var.project_name}" build build && \
+    docker-compose -f deploy.docker-compose.yml -p "${var.project_name}" run build && \
     aws s3 sync ${var.build}/_next s3://${aws_s3_bucket.b.id}/_next --region=${var.region} --size-only --cache-control "max-age=31557600" && \
     aws s3 sync ${var.build}/fonts s3://${aws_s3_bucket.b.id}/fonts --region=${var.region} --size-only --cache-control "max-age=31557600" && \
     aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id} --region=${var.region} --size-only --cache-control "no-store, no-cache, must-revalidate" && \
@@ -202,4 +215,30 @@ resource "null_resource" "remove_and_upload_to_s3" {
     aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id} --region=${var.region} --size-only --delete
     EOF
   }
+}
+
+module "auth_demo" {
+  source = "./services/auth-demo"
+
+  region = "${var.region}"
+  stage = "${var.stage}"
+  service = "${var.service}"
+  callback_urls = ["${local.auth_demo_location}"]
+  logout_urls = ["${local.auth_demo_location}"]
+}
+
+output "user_pool_id" {
+  value = module.auth_demo.user_pool_id
+}
+output "user_pool_client_id" {
+  value = module.auth_demo.user_pool_client_id
+}
+output "token_issuer" {
+  value = module.auth_demo.token_issuer
+}
+output "cognito_host" {
+  value = module.auth_demo.cognito_host
+}
+output "api_url" {
+  value = module.auth_demo.api_url
 }

@@ -16,9 +16,18 @@ RUN yarn install --prod && yarn cache clean
 COPY . .
 
 # Stop Tina being loaded in production
+# TODO: Move this to a build script
 RUN \
   rm pages/_app.js && \
-  for i in ./cms/*.production.js; do mv -f $i ./cms/`basename $i .production.js`.js; done;
+  for i in ./cms/*.production.js; do mv -f $i ./cms/`basename $i .production.js`.js; done; \
+  for i in ./cms/auth-demo/*.production.js; do mv -f $i ./cms/auth-demo/`basename $i .production.js`.js; done;
+
+ARG COGNITO_HOST
+ENV REACT_APP_COGNITO_HOST=${COGNITO_HOST}
+ARG CLIENT_ID
+ENV REACT_APP_CLIENT_ID=${CLIENT_ID}
+ARG REDIRECT_URL
+ENV REACT_APP_REDIRECT_URL=${REDIRECT_URL}
 
 RUN yarn build
 

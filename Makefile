@@ -35,18 +35,14 @@
 
 # Deploy to AWS
 .deploy:
-	docker-compose -f deploy.docker-compose.yml build
-	docker-compose -f deploy.docker-compose.yml run build
-	docker-compose -f deploy.docker-compose.yml run deploy
+	PROJECT_NAME=leonyork-com-build docker-compose -f deploy.docker-compose.yml -p leonyork-com-build run deploy
 
 # Remove all the resources created by deploying
 .destroy:
 	docker-compose -f deploy.docker-compose.yml run deploy destroy -auto-approve -input=false -force
 
 # sh into the container - useful for running commands like import
-.deploy-sh:
-	docker-compose -f deploy.docker-compose.yml build
-	docker-compose -f deploy.docker-compose.yml run build
+.deploy-sh:  
 	docker-compose -f deploy.docker-compose.yml run --entrypoint /bin/sh deploy
 
 

@@ -6,6 +6,12 @@ const PurgecssPlugin = require("purgecss-webpack-plugin")
 const withOffline = require("next-offline")
 
 const nextConfig = {
+    env: {
+        REACT_APP_COGNITO_HOST: process.env.REACT_APP_COGNITO_HOST,
+        REACT_APP_CLIENT_ID: process.env.REACT_APP_CLIENT_ID,
+        REACT_APP_REDIRECT_URL: process.env.REACT_APP_REDIRECT_URL
+    },
+
     webpack: (config) => {
         config.plugins.push(
             new PurgecssPlugin({
@@ -20,7 +26,8 @@ const nextConfig = {
                     /^collapse/,
                     /^show/,
                     /bg/,
-                    /sticky/
+                    /sticky/,
+                    /^btn/
                 ],
             })
         )
