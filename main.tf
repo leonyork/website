@@ -211,8 +211,11 @@ resource "null_resource" "remove_and_upload_to_s3" {
     aws s3 sync ${var.build}/fonts s3://${aws_s3_bucket.b.id}/fonts --region=${var.region} --size-only --cache-control "max-age=31557600" && \
     aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id} --region=${var.region} --size-only --cache-control "no-store, no-cache, must-revalidate" && \
     aws s3 cp ${var.build}/index.html s3://${aws_s3_bucket.b.id}/index.html --region=${var.region}  --cache-control "no-store, no-cache, must-revalidate" && \
-    aws cloudfront create-invalidation --distribution-id ${aws_cloudfront_distribution.s3_distribution.id} --paths /index.html --region=${var.region} && \
     aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id} --region=${var.region} --size-only --delete
+    find ./${var.build} -type f -name '*.html' ! -name 'index.html' ! -name '404.html' | while read HTMLFILE; do \
+      echo copying $HTMLFILE to s3://${aws_s3_bucket.b.id}/$(basename $HTMLFILE .html) && \
+      cat $HTMLFILE | aws s3 cp - s3://${aws_s3_bucket.b.id}/$(basename $HTMLFILE .html) --region=${var.region} --content-type "text/html" --cache-control "no-store, no-cache, must-revalidate"; \
+    done;
     EOF
   }
 }

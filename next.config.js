@@ -16,8 +16,8 @@ const nextConfig = {
         config.plugins.push(
             new PurgecssPlugin({
                 paths: glob.sync([
-                    "pages/*.js",
-                    "components/*.js"
+                    "pages/**/*.js",
+                    "components/**/*.js"
                 ]),
                 whitelistPatterns: [
                     /nav/,
@@ -27,7 +27,8 @@ const nextConfig = {
                     /^show/,
                     /bg/,
                     /sticky/,
-                    /^btn/
+                    /^btn/,
+                    /^text/
                 ],
             })
         )

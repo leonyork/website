@@ -43,7 +43,7 @@
 
 # sh into the container - useful for running commands like import
 .deploy-sh:  
-	docker-compose -f deploy.docker-compose.yml run --entrypoint /bin/sh deploy
+	docker-compose -f deploy.docker-compose.yml -p leonyork-com-build run --entrypoint /bin/sh deploy
 
 
 # Run the full build
