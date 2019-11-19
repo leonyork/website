@@ -12,10 +12,10 @@ const Header = () => (
         </Navbar.Toggle>
         <Navbar.Collapse id="basic-navbar-nav" style={{ paddingTop: "0", paddingBottom: "0", marginBottom: "-1em", marginTop: "-1em" }}>
           <Nav className="mr-auto" style={{ fontFamily: "HanleyPro-Slim", marginTop: "0.8em" }}>
-            <Nav.Link href="#projects" active={false/*Don't stop the hover working once the link is clicked*/}>
+            <Nav.Link href="/#projects" active={false/*Don't stop the hover working once the link is clicked*/}>
               Projects
                     </Nav.Link>
-            <Nav.Link href="#links" active={false/*Don't stop the hover working once the link is clicked*/}>
+            <Nav.Link href="/#links" active={false/*Don't stop the hover working once the link is clicked*/}>
               Links
                     </Nav.Link>
           </Nav>

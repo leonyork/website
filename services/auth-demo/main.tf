@@ -1,7 +1,7 @@
 
 locals {
     api_path = "${path.module}/api"
-    api_url_file_location = "${path.module}/.terraform/api-url"
+    api_url_file_location = "/api-url"
 }
 
 module "cognito" {

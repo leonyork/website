@@ -1,4 +1,5 @@
 import * as React from "react"
+import Link from "next/link"
 import Jumbotron from "react-bootstrap/Jumbotron"
 import Container from "react-bootstrap/Container"
 import Card from "react-bootstrap/Card"
@@ -8,7 +9,7 @@ import addCms from "../cms/index-cms"
 
 function IndexPage(props) {
   let jumbo = addCms(props)
-  
+
   return (
     <Layout>
       <Jumbotron style={{ paddingTop: "1.5em", paddingBottom: "4em" }}>
@@ -18,11 +19,36 @@ function IndexPage(props) {
           <p className="lead">{jumbo.lead}</p>
           {jumbo.leadtext.split(/[\r\n]/).map((line, index) => (
             <p key={index}>{line}</p>
-          )) }
+          ))}
         </Container>
       </Jumbotron>
       <Container id="projects">
         <h1 style={{ fontFamily: "HanleyPro-Slim" }}>Projects</h1>
+
+
+        <Card className="mb-3">
+          <Card.Body>
+            <Card.Title as="h2">OAuth</Card.Title>
+            <Card.Text as="div"><p>OAuth implicit flow - 2019</p>
+              <h4>Why?</h4>
+              <p>Fixing the bad developer experience involved in IAM and API gateways</p>
+              <h4>What?</h4>
+              <p>A project that's easy to develop in, easy to deploy and easy to destroy</p>
+              <h4>How?</h4>
+              <p>Utilise <a href="https://3musketeers.io/">the 3 musketeers</a> approach to provide a cross platform Developer-CI-CD consistent experience</p>
+              <p>Along with <a href="https://nextjs.org/">Next JS</a> and <a href="https://tinacms.org">Tina CMS</a> to provide a rapid developer and customer experience</p>
+              <p>And, finally: <a href="https://https://serverless.com/">The Serverless Framework</a> and <a href="https://www.terraform.io/">Terraform</a> to deploy to <a href="https://aws.amazon.com">AWS</a> with one command</p>
+              <h4>The result?</h4>
+              <p><Link href="auth-demo"><a>A demo</a></Link> and <a href="https://github.com/leonyork/cognito-oauth2-demo">some source code</a></p>
+              <small> Image below adapted from&nbsp;
+                <a href={"https://unsplash.com/@anniespratt?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge"} target={"_blank"} rel={"noopener noreferrer"} title={"Download free do whatever you want high-resolution photos from Annie Spratt"}>
+                Annie Spratt
+                </a>
+                </small>
+            </Card.Text>
+          </Card.Body>
+          <Card.Img variant="bottom" src={require('../images/passport.jpg')} alt="Passport" style={{ height: "5rem", objectFit: "cover", objectPosition: "50% 50%" }} />
+        </Card>
 
         <Card className="mb-3">
           <Card.Body>
