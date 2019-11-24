@@ -202,10 +202,6 @@ resource "null_resource" "remove_and_upload_to_s3" {
   provisioner "local-exec" {
     command = <<EOF
     set -eux && \
-    COGNITO_HOST=${module.auth_demo.cognito_host} \
-    CLIENT_ID=${module.auth_demo.user_pool_client_id} \
-    REDIRECT_URL=${local.auth_demo_location} \
-    USER_API_URL=${module.auth_demo.api_url} \
     docker-compose -f deploy.docker-compose.yml -p "${var.project_name}" build build && \
     docker-compose -f deploy.docker-compose.yml -p "${var.project_name}" run build && \
     aws s3 sync ${var.build}/_next s3://${aws_s3_bucket.b.id}/_next --region=${var.region} --size-only --cache-control "max-age=31557600" && \
@@ -219,6 +215,13 @@ resource "null_resource" "remove_and_upload_to_s3" {
       cat $HTMLFILE | aws s3 cp - s3://${aws_s3_bucket.b.id}/$(basename $HTMLFILE .html) --region=${var.region} --content-type "text/html" --cache-control "no-store, no-cache, must-revalidate"; \
     done;
     EOF
+
+    environment = {
+      COGNITO_HOST = "${module.auth_demo.cognito_host}"
+      CLIENT_ID = "${module.auth_demo.user_pool_client_id}"
+      REDIRECT_URL = "${local.auth_demo_location}"
+      USER_API_URL = "${module.auth_demo.api_url}"
+    }
   }
 }
 
