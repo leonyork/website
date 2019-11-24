@@ -41,7 +41,7 @@ function IndexPage(props) {
               <h4>The result?</h4>
               <p><Link href="auth-demo"><a>A demo</a></Link> and <a href="https://github.com/leonyork/cognito-oauth2-demo">some source code</a></p>
               <small> Image below adapted from&nbsp;
-                <a href={"https://unsplash.com/@anniespratt?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge"} target={"_blank"} rel={"noopener noreferrer"} title={"Download free do whatever you want high-resolution photos from Annie Spratt"}>
+                <a href={"https://unsplash.com/@anniespratt?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge"} title={"Download free do whatever you want high-resolution photos from Annie Spratt"}>
                 Annie Spratt
                 </a>
                 </small>

@@ -11,13 +11,16 @@ services:
     # Init and apply, specifying the directory to take the files from as /app/out
     command: "apply -input=false -auto-approve"
     working_dir: /app
+    environment:
+      - AWS_SECRET_KEY_ID=${AWS_SECRET_KEY_ID}
+      - AWS_ACCESS_KEY_ID=${AWS_SECRET_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - NODE_VERSION=${NODE_VERSION}
     volumes:
       - .:/app
       - out:/app/out
       - /var/run/docker.sock:/var/run/docker.sock
-    secrets:
-      - source: aws
-        target: /root/.aws
+      - terraform:/app/.terraform
   # You shouldn't need to run this as it is called by main.tf
   # TODO: Just do this running docker commands in main.tf
   build:
@@ -29,6 +32,7 @@ services:
         COGNITO_HOST: ${COGNITO_HOST}
         CLIENT_ID: ${CLIENT_ID}
         REDIRECT_URL: ${REDIRECT_URL}
+        USER_API_URL: ${USER_API_URL}
     volumes:
       - out:/app/out-shared
     command: |
@@ -37,9 +41,6 @@ services:
         cp -rf out/* out-shared/"
 volumes:
   out:
-secrets:
-  aws:
-    file: ~/.aws
-
+  terraform:
 
     

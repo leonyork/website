@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+  # You should only need to run this service
+  deploy:
+    build: 
+      context: .
+      dockerfile: deploy.Dockerfile 
+      target: builder
+      args:
+        NODE_VERSION: ${NODE_VERSION}
+        USER_STORE_API_SECURED_ISSUER: ${USER_STORE_API_SECURED_ISSUER}
+        USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN: ${USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN}
+        STAGE: ${STAGE}
+        REGION: ${REGION}
+    command: "npm run deploy -- --package .serverless --stage ${STAGE} --region ${REGION}"
+    environment:
+      - AWS_SECRET_KEY_ID=${AWS_SECRET_KEY_ID}
+      - AWS_ACCESS_KEY_ID=${AWS_SECRET_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    working_dir: /app
+
+
+    

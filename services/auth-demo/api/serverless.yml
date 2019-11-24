@@ -10,6 +10,7 @@ provider:
   environment:
     USERS_TABLE: ${self:service}-${opt:stage, self:provider.stage}
     USER_STORE_API_SECURED_ISSUER: ${env:USER_STORE_API_SECURED_ISSUER}
+    USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN: ${env:USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -35,6 +36,12 @@ functions:
             method: get 
             path: /user/{id}
             authorizer: authorizer
+            cors:
+              origin: ${env:USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN}
+              headers:
+                - Authorization
+                - Content-Type
+              allowCredentials: false
   - put:
       handler: src/handlers/user/put.handler
       events:
@@ -42,6 +49,12 @@ functions:
             method: put
             path: /user/{id}
             authorizer: authorizer
+            cors:
+              origin: ${env:USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN}
+              headers:
+                - Authorization
+                - Content-Type
+              allowCredentials: false
   - authorizer:
       handler: src/handlers/authorizer/authorizer.handler
       type: TOKEN
@@ -63,6 +76,15 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'${env:USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN}'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'Authorization,Content-Type'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
   Outputs:
     ApiUrl:
       Description: "The API Gateway URL"

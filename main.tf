@@ -20,7 +20,6 @@ variable "project_name" {
 provider "aws" {
   region = "${var.region}"
   version = "~> 2.36"
-  shared_credentials_file = "~/.aws/credentials"
 }
 
 terraform {
@@ -29,7 +28,6 @@ terraform {
     key    = "terraform.tfstate"
     region = "us-east-1"
     encrypt = true
-    shared_credentials_file = "~/.aws/credentials"
   }
 }
 
@@ -198,9 +196,12 @@ resource "null_resource" "remove_and_upload_to_s3" {
   # For speed, don't sync up files that sizes haven't changed (e.g. static files that could be larger)
   # Always invalidate the cloudfront cache, even if we've just created it - for simpleness
   # Only delete after updating index.html and invalidating cloudfront so the new files definitely exist
+  # We should always copy up some files such as index.html and service_worker.js as the size may not have changed
+  # but the hash that they point to in _next/static may have.
   # TODO: Move to script
   provisioner "local-exec" {
     command = <<EOF
+    set -eux && \
     COGNITO_HOST=${module.auth_demo.cognito_host} \
     CLIENT_ID=${module.auth_demo.user_pool_client_id} \
     REDIRECT_URL=${local.auth_demo_location} \
@@ -211,6 +212,7 @@ resource "null_resource" "remove_and_upload_to_s3" {
     aws s3 sync ${var.build}/fonts s3://${aws_s3_bucket.b.id}/fonts --region=${var.region} --size-only --cache-control "max-age=31557600" && \
     aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id} --region=${var.region} --size-only --cache-control "no-store, no-cache, must-revalidate" && \
     aws s3 cp ${var.build}/index.html s3://${aws_s3_bucket.b.id}/index.html --region=${var.region}  --cache-control "no-store, no-cache, must-revalidate" && \
+    aws s3 cp ${var.build}/service-worker.js s3://${aws_s3_bucket.b.id}/service-worker.js --region=${var.region}  --cache-control "no-store, no-cache, must-revalidate" && \
     aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id} --region=${var.region} --size-only --delete
     find ./${var.build} -type f -name '*.html' ! -name 'index.html' ! -name '404.html' | while read HTMLFILE; do \
       echo copying $HTMLFILE to s3://${aws_s3_bucket.b.id}/$(basename $HTMLFILE .html) && \
@@ -228,6 +230,7 @@ module "auth_demo" {
   service = "${var.service}"
   callback_urls = ["${local.auth_demo_location}"]
   logout_urls = ["${local.auth_demo_location}"]
+  access_control_allow_origin = "${var.domain}"
 }
 
 output "user_pool_id" {

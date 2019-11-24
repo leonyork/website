@@ -9,6 +9,7 @@
         "test": "jest",
         "unit": "jest src",
         "integration": "jest test/integration",
+        "package": "serverless package",
         "deploy": "serverless deploy",
         "remove": "serverless remove",
         "offline": "serverless offline start"

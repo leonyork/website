@@ -32,6 +32,8 @@
 
 # Get the logs from the dev container
 
+.deploy-build:  
+	docker-compose -f deploy.docker-compose.yml -p leonyork-com-build build deploy
 
 # Deploy to AWS
 .deploy:

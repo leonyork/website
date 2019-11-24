@@ -1,0 +1,25 @@
+ARG NODE_VERSION
+FROM node:${NODE_VERSION}-alpine AS serverless
+
+WORKDIR /app
+RUN npm install -g serverless
+
+FROM serverless AS install
+
+COPY package.json .
+COPY package-lock.json .
+
+RUN npm install
+
+FROM install AS builder
+COPY . .
+
+ARG USER_STORE_API_SECURED_ISSUER
+ENV USER_STORE_API_SECURED_ISSUER=${USER_STORE_API_SECURED_ISSUER}
+
+ARG USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN
+ENV USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN=${USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN}
+
+ARG STAGE
+ARG REGION
+RUN npm run package -- --stage=${STAGE} --region=${REGION}

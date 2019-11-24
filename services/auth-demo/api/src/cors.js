@@ -11,7 +11,7 @@ exports.cors = (handler) => {
         result.headers = result.headers || {}
 
         if (!result.headers.hasOwnProperty('Access-Control-Allow-Headers')) {
-            result.headers['Access-Control-Allow-Headers'] = 'Authorization'
+            result.headers['Access-Control-Allow-Headers'] = 'Authorization Content-Type'
         }
 
         if (!result.headers.hasOwnProperty('Access-Control-Allow-Origin')) {
