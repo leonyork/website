@@ -1,10 +1,8 @@
 version: '3.7'
 services:
-  # You should only need to run this service
   deploy:
     build: 
       context: .
-      dockerfile: deploy.Dockerfile 
       target: builder
       args:
         NODE_VERSION: ${NODE_VERSION}

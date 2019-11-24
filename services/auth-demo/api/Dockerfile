@@ -23,3 +23,6 @@ ENV USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN=${USER_STORE_API_ACCESS_CONTROL_A
 ARG STAGE
 ARG REGION
 RUN npm run package -- --stage=${STAGE} --region=${REGION}
+
+FROM builder
+CMD ["npm", "run", "offline"]
