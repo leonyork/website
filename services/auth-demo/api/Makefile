@@ -1,3 +1,15 @@
+# Build the dev container
+.dev-build:
+	docker-compose -f dev.docker-compose.yml build
+
+# Run the project in development mode - i.e. hot reloading as you change the code.
+.dev: .dev-build
+	docker-compose -f dev.docker-compose.yml up
+
+# Bring down all services
+.dev-down:
+	docker-compose -f dev.docker-compose.yml down
+
 .deploy-build:
 	docker-compose -f deploy.docker-compose.yml build
 

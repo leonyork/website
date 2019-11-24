@@ -13,15 +13,15 @@ export default function IndexPage(props) {
     let jumbo = addCms(props)
 
     const login = async () => {
-        window.location.href = `https://${
+        window.location.href = `${
             process.env.REACT_APP_COGNITO_HOST
-            }/oauth2/authorize?response_type=token&client_id=${
+            }/oauth2/authorize?response_type=token&scope=openid&client_id=${
             process.env.REACT_APP_CLIENT_ID
             }&redirect_uri=${encodeURI(process.env.REACT_APP_REDIRECT_URL)}`;
     }
 
     const logout = async () => {
-        window.location.href = `https://${
+        window.location.href = `${
             process.env.REACT_APP_COGNITO_HOST
             }/logout?client_id=${
             process.env.REACT_APP_CLIENT_ID

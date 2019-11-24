@@ -217,7 +217,7 @@ resource "null_resource" "remove_and_upload_to_s3" {
     EOF
 
     environment = {
-      COGNITO_HOST = "${module.auth_demo.cognito_host}"
+      COGNITO_HOST = "https://${module.auth_demo.cognito_host}"
       CLIENT_ID = "${module.auth_demo.user_pool_client_id}"
       REDIRECT_URL = "${local.auth_demo_location}"
       USER_API_URL = "${module.auth_demo.api_url}"

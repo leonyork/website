@@ -37,7 +37,7 @@ export default class Message extends Component {
             return undefined
         }
         const response = await fetch(
-            `https://${process.env.REACT_APP_COGNITO_HOST}/oauth2/userInfo`,
+            `${process.env.REACT_APP_COGNITO_HOST}/oauth2/userInfo`,
             { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         return response.json();
