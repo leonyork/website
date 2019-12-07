@@ -1,13 +1,13 @@
 version: '3.7'
 services:
-  auth-demo-api-dev:
+  users-api-dev:
     build:
       context: .
       target: serverless
       args:
         NODE_VERSION: ${NODE_VERSION-12.13.0}
     ports:
-      - "3003:3000"
+      - "3003:3003"
     volumes:
       - .:/app
       - node_modules:/app/node_modules
@@ -21,9 +21,9 @@ services:
         target: /root/.aws
     environment:
       - NODE_ENV=development
-      - USER_STORE_API_SECURED_ISSUER=${USER_STORE_API_SECURED_ISSUER}
+      - USER_STORE_API_SECURED_ISSUER=http://users-jwks
       - USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN=${USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN-*}
-      - DYNAMODB_HOST=auth-demo-dynamodb
+      - DYNAMODB_HOST=users-dynamodb
     # Copy over the .ssh folder and make sure the correct user owns it
     entrypoint: >
       sh -c 'cp -rfd /root/.ssh_host /root/.ssh &&
@@ -31,10 +31,14 @@ services:
       npm install && 
       docker-entrypoint.sh $${0} "$$@"' 
     command:  ["npm", "run", "offline", "--", "--watch"]
-  auth-demo-dynamodb:
+  users-dynamodb:
     build:
       context: .
       dockerfile: dynamo.Dockerfile
+  users-jwks:
+    build:
+      context: .
+      dockerfile: jwks.Dockerfile
 volumes:
   node_modules:
   serverless:

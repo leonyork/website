@@ -29,6 +29,11 @@
 .unit:
 	make -C services/auth-demo/api .unit
 
+.integration:
+	make -C services/auth-demo/api .integration
+
+.test: .unit .integration
+
 .deploy-build:  
 	docker-compose -f deploy.docker-compose.yml -p leonyork-com-build build deploy
 

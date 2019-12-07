@@ -1,4 +1,4 @@
-ARG NODE_VERSION
+ARG NODE_VERSION=12.13.0
 FROM node:${NODE_VERSION}-alpine AS serverless
 
 WORKDIR /app
@@ -30,4 +30,4 @@ ARG REGION
 RUN npm run package -- --stage=${STAGE} --region=${REGION}
 
 FROM builder
-CMD ["npm", "run", "offline"]
+CMD ["npm", "run", "offline", "--", "--port 3003"]

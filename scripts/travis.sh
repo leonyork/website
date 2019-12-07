@@ -10,11 +10,11 @@ echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
 
 if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
   echo "Triggered on Pull Request: ${TRAVIS_PULL_REQUEST}"
-  make .unit
+  make .test
   make build
 elif [ "${TRAVIS_BRANCH}" = "master" ]; then
   echo "Triggered on Commit/Merge/Schedule to branch: ${TRAVIS_BRANCH}"
-  make .unit
+  make .test
   make .deploy
 else
   echo "Error: case not handled"

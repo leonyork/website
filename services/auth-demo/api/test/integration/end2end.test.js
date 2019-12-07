@@ -1,22 +1,16 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 var jwkToPem = require('jwk-to-pem');
-if (!process.env.USER_STORE_API_SECURED_ISSUER) {
-    require('dotenv').config();
-}
-if (!process.env.USER_STORE_API_SECURED_TEST_URL) {
-    require('./helper/severless-offline');
-} else {
-    jest.setTimeout(10000);
-}
+
 const requestUserApi = () => request(process.env.USER_STORE_API_SECURED_TEST_URL);
 
-describe('User API', async() => {
+describe('User API', () => {
 
     let key;
     let keyId;
 
     beforeAll(async() => {
+        console.log(process.env.USER_STORE_API_SECURED_ISSUER)
         const response = await request(process.env.USER_STORE_API_SECURED_ISSUER).get("/.well-known/jwks.json")
         const keyJson = JSON.parse(response.text).keys[0]
         key = await jwkToPem(keyJson, { private: true });
