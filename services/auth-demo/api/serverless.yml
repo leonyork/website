@@ -1,14 +1,14 @@
 # For full config options, check the docs:
 #    docs.serverless.com
 
-service: users
+service: auth-demo-users
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   memorySize: 128
   environment:
-    USERS_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    USERS_TABLE: ${env:USERS_TABLE, '${self:service}-${opt:stage, self:provider.stage}'}
     USER_STORE_API_SECURED_ISSUER: ${env:USER_STORE_API_SECURED_ISSUER}
     USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN: ${env:USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN}
   iamRoleStatements:
@@ -21,7 +21,6 @@ provider:
 plugins:
   - serverless-dotenv-plugin
   - serverless-webpack
-  - serverless-dynamodb-local
   - serverless-offline
 
 #Package individually so that each function is smaller (i.e. tiny bit quicker startup!!!)
@@ -63,19 +62,6 @@ functions:
 
 resources:
   Resources:
-    UsersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:provider.environment.USERS_TABLE}
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
     GatewayResponseDefault4XX:
       Type: 'AWS::ApiGateway::GatewayResponse'
       Properties:
@@ -96,13 +82,9 @@ resources:
             - ".execute-api.${self:provider.region}.amazonaws.com/${opt:stage, self:provider.stage}"
 
 custom:
-  dynamodb:
-    start:
-      host: "0.0.0.0"
-      port: 8000
-      inMemory: true
-      migrate: true
   webpack:
     includeModules:
       forceExclude:
         - aws-sdk
+  serverless-offline:
+    host: 0.0.0.0

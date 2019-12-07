@@ -44,8 +44,6 @@ const getJwksKeys = () => {
 }
 
 exports.handler = (event, context, callback) => {
-    console.log(JSON.stringify(event));
-    console.log(JSON.stringify(context));
     try {
         var token = event.authorizationToken.split(" ")[1];
     } catch (err) { return context.fail("No Authorization header with Bearer token provided"); }
@@ -62,5 +60,8 @@ exports.handler = (event, context, callback) => {
 
             callback(null, createPolicy(event, context, decoded.sub, "Allow"));
         });
-    } catch (err) { return context.fail("Invalid JWT"); }
+    } catch (err) { 
+        console.log(err)
+        return context.fail("Invalid JWT"); 
+    }
 };

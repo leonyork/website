@@ -11,5 +11,5 @@ output "cognito_host" {
   value = "${module.cognito.cognito_host}"
 }
 output "api_url" {
-  value = "${data.local_file.api_url.content}"
+  value = "${module.api.api_url}"
 }

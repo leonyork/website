@@ -15,20 +15,18 @@
         "offline": "serverless offline start"
     },
     "devDependencies": {
-        "acorn": "^6.1.1",
         "create-cert": "^1.0.6",
-        "jest": "^24.1.0",
-        "jwk-to-pem": "^2.0.1",
-        "serverless": "^1.57.0",
-        "serverless-dotenv-plugin": "^2.0.1",
-        "serverless-dynamodb-local": "^0.2.36",
-        "serverless-offline": "^4.7.1",
-        "serverless-webpack": "^5.2.0",
-        "supertest": "^4.0.0",
+        "jest": "^24.9.0",
+        "jwk-to-pem": "^2.0.2",
+        "serverless": "^1.59.2",
+        "serverless-dotenv-plugin": "^2.1.1",
+        "serverless-offline": "^5.12.1",
+        "serverless-webpack": "^5.3.1",
+        "supertest": "^4.0.2",
         "tree-kill": "^1.2.1",
-        "webpack": "^4.29.6"
+        "webpack": "^4.41.2"
     },
     "dependencies": {
-        "jwks-rsa": "^1.4.0"
+        "jwks-rsa": "^1.6.0"
     }
 }

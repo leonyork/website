@@ -3,12 +3,11 @@ services:
   auth-demo-api-dev:
     build:
       context: .
-      dockerfile: Dockerfile
       target: serverless
       args:
         NODE_VERSION: ${NODE_VERSION-12.13.0}
     ports:
-      - "8000:8000"
+      - "3003:3000"
     volumes:
       - .:/app
       - node_modules:/app/node_modules
@@ -24,16 +23,18 @@ services:
       - NODE_ENV=development
       - USER_STORE_API_SECURED_ISSUER=${USER_STORE_API_SECURED_ISSUER}
       - USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN=${USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN-*}
+      - DYNAMODB_HOST=auth-demo-dynamodb
     # Copy over the .ssh folder and make sure the correct user owns it
     entrypoint: >
       sh -c 'cp -rfd /root/.ssh_host /root/.ssh &&
       chmod -R 400 /root/.ssh &&
-      apk add openjdk8-jre &&
       npm install && 
-      sls dynamodb install &&
-      ls ./bin &&
       docker-entrypoint.sh $${0} "$$@"' 
     command:  ["npm", "run", "offline", "--", "--watch"]
+  auth-demo-dynamodb:
+    build:
+      context: .
+      dockerfile: dynamo.Dockerfile
 volumes:
   node_modules:
   serverless:

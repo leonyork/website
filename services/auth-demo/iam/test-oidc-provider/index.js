@@ -11,6 +11,14 @@ const configuration = {
         response_types: ['token'],
         token_endpoint_auth_method: 'none'
     }],
+    features: {
+        ietfJWTAccessTokenProfile: { enabled: true, ack: 2 },
+    },
+    formats: {
+        AccessToken(ctx, token) {
+            return 'jwt'
+        }
+    },
     async findAccount(ctx, id) {
         const actualId = `account-id-${id}`
         return {
@@ -21,7 +29,7 @@ const configuration = {
     routes: {
         authorization: '/oauth2/authorize',
         end_session: '/logout',
-        jwks: '/jwks',
+        jwks: '/.well-known/jwks.json',
         userinfo: '/oauth2/userInfo'
     },
     async postLogoutSuccessSource(ctx) {
@@ -48,7 +56,7 @@ const configuration = {
         <script>document.getElementById("op.logoutForm").submit();</script>
       </body>
       </html>`
-      }
+    }
 };
 
 const oidc = new Provider('http://localhost:3000', configuration);
