@@ -10,11 +10,11 @@ echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
 
 if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
   echo "Triggered on Pull Request: ${TRAVIS_PULL_REQUEST}"
+  make .unit
   make build
 elif [ "${TRAVIS_BRANCH}" = "master" ]; then
   echo "Triggered on Commit/Merge/Schedule to branch: ${TRAVIS_BRANCH}"
-  mkdir -p ~/.aws
-  echo -n $AWS_CREDENTIALS_FILE | base64 -d > ~/.aws/credentials
+  make .unit
   make .deploy
 else
   echo "Error: case not handled"

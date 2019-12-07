@@ -36,7 +36,7 @@ describe("cors", async() => {
             body: "test",
             headers: {
                 "test": "test",
-                'Access-Control-Allow-Headers': 'Authorization',
+                'Access-Control-Allow-Headers': 'Authorization Content-Type',
                 'Access-Control-Allow-Origin': '*'
             }
         })
@@ -82,7 +82,7 @@ describe("cors", async() => {
         expect(result).toEqual({
             body: "test",
             headers: {
-                'Access-Control-Allow-Headers': 'Authorization',
+                'Access-Control-Allow-Headers': 'Authorization Content-Type',
                 'Access-Control-Allow-Origin': 'test'
             }
         })

@@ -11,8 +11,10 @@ COPY package-lock.json .
 
 RUN npm install
 
-FROM install AS builder
+FROM install AS source
 COPY . .
+
+FROM source AS builder
 
 ARG USERS_TABLE
 ENV USERS_TABLE=${USERS_TABLE}

@@ -10,6 +10,12 @@
 .dev-down:
 	docker-compose -f dev.docker-compose.yml down
 
+.task-build:
+	docker-compose -f tasks.docker-compose.yml build task
+
+.unit: .task-build
+	docker-compose -f tasks.docker-compose.yml run task sh -c 'apk add openssl && npm run unit'
+
 .deploy-build:
 	docker-compose -f deploy.docker-compose.yml build
 

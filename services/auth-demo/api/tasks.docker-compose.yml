@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  task:
+    build: 
+      context: .
+      target: source
+      args:
+        NODE_VERSION: ${NODE_VERSION-12.13.0}
+
+
+    

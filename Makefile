@@ -18,10 +18,6 @@
 		cp -rdf \$$PROJECT_NAME/* \$$PROJECT_NAME/.[!.]* . && \
 		rm -rf \$$PROJECT_NAME"
 
-.dev-down:
-	make -C services/auth-demo/ .dev-down
-	docker-compose -f dev.docker-compose.yml down
-
 # Run the project in development mode - i.e. hot reloading as you change the code.
 .dev: .dev-build
 	docker-compose -f dev.docker-compose.yml up
@@ -30,7 +26,8 @@
 .dev-sh: .dev-build
 	docker-compose -f dev.docker-compose.yml run --rm dev /bin/sh
 
-# Get the logs from the dev container
+.unit:
+	make -C services/auth-demo/api .unit
 
 .deploy-build:  
 	docker-compose -f deploy.docker-compose.yml -p leonyork-com-build build deploy
