@@ -1,6 +1,6 @@
 const cors = require('./cors').cors;
 
-describe("cors", async() => {
+describe("cors", () => {
     it("should not add any CORS headers if the environment variable is not set", async() => {
         process.env.USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN = undefined
 

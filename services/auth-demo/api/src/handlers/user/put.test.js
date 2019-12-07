@@ -10,7 +10,7 @@ UserRepository.mockImplementation(() => mockUserRespository);
 
 const handler = require('./put').handler;
 
-describe("put handler", async() => {
+describe("put handler", () => {
     it("should call the user repository with the id from the path parameters and return the content", async() => {
         const mockResponse = { id: 1, content: `{"name":"test"}` };
         mockUserRespository.put.mockResolvedValue(mockResponse);

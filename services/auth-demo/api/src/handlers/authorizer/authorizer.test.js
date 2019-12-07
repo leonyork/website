@@ -12,7 +12,7 @@ jwksClient.mockImplementation(() => mockJwksClient);
 
 const handler = require('./authorizer').handler;
 
-describe("authorizer", async() => {
+describe("authorizer", () => {
     it("should return the correct policy if the JWT sub is set", async() => {
         const keys = await createCert();
         mockJwksClient.getSigningKey.mockImplementation((kid, func) => {

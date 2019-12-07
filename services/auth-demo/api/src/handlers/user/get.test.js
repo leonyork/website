@@ -10,7 +10,7 @@ UserRepository.mockImplementation(() => mockUserRespository);
 
 const handler = require('./get').handler;
 
-describe("get handler", async() => {
+describe("get handler", () => {
     it("should call the user repository with the id from the path parameters and return the content", async() => {
         const mockResponse = { id: 1, content: "test" };
         mockUserRespository.get.mockResolvedValue(mockResponse);
