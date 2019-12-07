@@ -1,10 +1,9 @@
 ARG NODE_VERSION=12.13.0
-FROM node:${NODE_VERSION}-alpine AS serverless
+FROM node:${NODE_VERSION}-alpine AS node
 
 WORKDIR /app
-RUN npm install -g serverless
 
-FROM serverless AS install
+FROM node AS install
 
 COPY package.json .
 COPY package-lock.json .
