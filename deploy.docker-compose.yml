@@ -26,7 +26,7 @@ services:
   build:
     build:
       context: .
-      target: builder
+      target: export
       args:
         NODE_VERSION: ${NODE_VERSION} #Comes from .env file
         COGNITO_HOST: ${COGNITO_HOST}

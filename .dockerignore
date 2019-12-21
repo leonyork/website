@@ -26,7 +26,7 @@ yarn-error.log*
 
 *.Dockerfile
 Dockerfile
-docker-compose*
+*docker-compose*
 Makefile 
 README.md
 .gitignore
@@ -35,3 +35,4 @@ main.tf
 terraform.tfstate*
 .terraform
 services
+e2e

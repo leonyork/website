@@ -51,6 +51,8 @@ services:
     secrets:
       - source: ssh
         target: /root/.ssh_host
+    environment: 
+      - REDIRECT_URL=http://localhost:3000/auth-demo
   auth-demo-api-dev:
     build:
       context: ./services/auth-demo/api

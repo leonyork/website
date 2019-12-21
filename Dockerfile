@@ -33,9 +33,16 @@ ENV REACT_APP_USER_API_URL=${USER_API_URL}
 
 RUN yarn build
 
-#Argument so that you can run a different task (e.g. tests)
-ARG COMMAND="yarn run next export"
-RUN ${COMMAND}
+FROM builder AS export
+RUN yarn run next export
+
+# next outputs /dir/index.js as /dir.html, so making these accessible as /dir
+# TODO: Make this work with the deploy
+RUN \
+  find ./out -type f -name '*.html' ! -name 'index.html' ! -name '404.html' | while read HTMLFILE; do \
+    mv $HTMLFILE $(dirname $HTMLFILE)/$(basename $HTMLFILE .html); \
+  done;
+    
 
 FROM nginx:${NGINX_VERSION}-alpine
 
@@ -51,6 +58,7 @@ RUN \
         root   /usr/share/nginx/html; \
         index  index.html; \
         add_header  Cache-Control \"no-store, no-cache, must-revalidate\"; \
+        default_type 'text/html'; \
     } \
     location ~ \.(jpg|jpeg|gif|pdf|js|css)$ { \
         root   /usr/share/nginx/html; \
@@ -59,4 +67,4 @@ RUN \
     error_page  404              /404.html; \
   }" > /etc/nginx/conf.d/default.conf
 
-COPY --chown=nginx:nginx --from=builder /app/out /usr/share/nginx/html/
+COPY --chown=nginx:nginx --from=export /app/out /usr/share/nginx/html/

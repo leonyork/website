@@ -6,7 +6,7 @@ const configuration = {
     clients: [{
         client_id: 'test',
         client_secret: 'test',
-        redirect_uris: ['http://localhost:3000/auth-demo'],
+        redirect_uris: [process.env.REDIRECT_URL || 'http://localhost:3000/auth-demo'],
         grant_types: ['implicit'],
         response_types: ['token'],
         token_endpoint_auth_method: 'none'
@@ -38,7 +38,7 @@ const configuration = {
       <title>Sign-out Success</title>
       </head>
       <body>
-      <script>window.location.href='http://localhost:3000/auth-demo';</script>
+      <script>window.location.href='${process.env.REDIRECT_URL || 'http://localhost:3000/auth-demo'}';</script>
       </body>
       </html>`
     },
@@ -59,7 +59,7 @@ const configuration = {
     }
 };
 
-const oidc = new Provider('http://localhost:3000', configuration);
+const oidc = new Provider('http://localhost:3002', configuration);
 
 //Allow redirect to localhost
 const { invalidate: orig } = oidc.Client.Schema.prototype;
@@ -74,7 +74,7 @@ oidc.Client.Schema.prototype.invalidate = function invalidate(message, code) {
 
 // Just expose a server standalone
 oidc.listen(3002, () => {
-    console.log(`Example: http://localhost:3002/oauth2/authorize?response_type=token&client_id=test&scope=openid&redirect_url=${encodeURI('http://localhost:3000/auth-demo')}`)
+    console.log(`Example: http://localhost:3002/oauth2/authorize?response_type=token&client_id=test&scope=openid&redirect_url=${encodeURI(process.env.REDIRECT_URL || 'http://localhost:3000/auth-demo')}`)
     console.log('Well known config: http://localhost:3002/.well-known/openid-configuration');
 });
 

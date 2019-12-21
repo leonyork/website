@@ -1,0 +1,65 @@
+version: '3.7'
+services:
+  e2e:
+    build:
+      context: ./e2e
+    entrypoint: >
+      /bin/sh -c "
+        wait-on http://web && 
+        wait-on tcp:auth-demo-iam:3002 &&
+        wait-on tcp:auth-demo-api:3003 &&
+        cypress run $${0} "$$@""
+    environment: 
+      - CYPRESS_baseUrl=http://web
+  web:
+    build: 
+      context: .
+      args:
+        NODE_VERSION: ${NODE_VERSION} #Comes from .env file
+        NGINX_VERSION: ${NGINX_VERSION} #Comes from .env file
+        COGNITO_HOST: http://auth-demo-iam:3002
+        CLIENT_ID: test
+        REDIRECT_URL: http://web/auth-demo
+        USER_API_URL: http://auth-demo-api-dev:3003
+  auth-demo-iam:
+    image: node:${NODE_VERSION}-alpine
+    working_dir: /app
+    volumes:
+      - ./services/auth-demo/iam/test-oidc-provider:/app
+      - auth_demo_iam_node_modules:/app/node_modules
+    entrypoint: >
+      sh -c 'npm install &&
+      $${0} "$$@"'
+    command: "npm start"
+    environment: 
+      - REDIRECT_URL=http://web/auth-demo
+  auth-demo-api:
+    build:
+      context: ./services/auth-demo/api
+      args:
+        NODE_VERSION: ${NODE_VERSION}
+        USERS_TABLE: users
+    volumes:
+      - ./services/auth-demo/api:/app
+      - auth_demo_api_node_modules:/app/node_modules
+      - auth_demo_api_serverless:/app/.serverless
+    environment:
+      - USER_STORE_API_SECURED_ISSUER=http://auth-demo-iam:3002
+      - USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN=http://web
+      - DYNAMODB_HOST=auth-demo-dynamodb
+      - USERS_TABLE=users
+    entrypoint: >
+      sh -c 'npm install && 
+      docker-entrypoint.sh $${0} "$$@"' 
+    command:  ["npm", "run", "offline"]
+  auth-demo-dynamodb:
+    build:
+      context: ./services/auth-demo/api
+      dockerfile: dynamo.Dockerfile
+      args:
+        TABLE_NAME: users
+volumes:
+  node_modules:
+  auth_demo_iam_node_modules:
+  auth_demo_api_node_modules:
+  auth_demo_api_serverless:
