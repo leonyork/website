@@ -33,10 +33,10 @@
 	make -C services/auth-demo/api .integration
 
 .e2e-build:
-	docker-compose -f e2e.docker-compose.yml build
+	docker-compose -f e2e.docker-compose.yml -p leonyork-com-e2e build
 
 .e2e: .e2e-build
-	docker-compose -f e2e.docker-compose.yml up --force-recreate --abort-on-container-exit --exit-code-from e2e
+	docker-compose -f e2e.docker-compose.yml -p leonyork-com-e2e up --force-recreate --abort-on-container-exit --exit-code-from e2e
 
 .test: .unit .integration .e2e
 
