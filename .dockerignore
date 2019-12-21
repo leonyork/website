@@ -34,5 +34,5 @@ README.md
 main.tf
 terraform.tfstate*
 .terraform
-services
-e2e
+/services
+/e2e
