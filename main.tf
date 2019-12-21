@@ -192,9 +192,8 @@ resource "null_resource" "remove_and_upload_to_s3" {
       build_number = "${timestamp()}"
   }
 
-  # Always sync up index.html whether the size has changed or not. 
+  # Always sync up index.html and other html files (that will have lost their extension - see Dockerfile) whether the size has changed or not. 
   # For speed, don't sync up files that sizes haven't changed (e.g. static files that could be larger)
-  # Always invalidate the cloudfront cache, even if we've just created it - for simpleness
   # Only delete after updating index.html and invalidating cloudfront so the new files definitely exist
   # We should always copy up some files such as index.html and service_worker.js as the size may not have changed
   # but the hash that they point to in _next/static may have.
@@ -209,11 +208,11 @@ resource "null_resource" "remove_and_upload_to_s3" {
     aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id} --region=${var.region} --size-only --cache-control "no-store, no-cache, must-revalidate" && \
     aws s3 cp ${var.build}/index.html s3://${aws_s3_bucket.b.id}/index.html --region=${var.region}  --cache-control "no-store, no-cache, must-revalidate" && \
     aws s3 cp ${var.build}/service-worker.js s3://${aws_s3_bucket.b.id}/service-worker.js --region=${var.region}  --cache-control "no-store, no-cache, must-revalidate" && \
-    aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id} --region=${var.region} --size-only --delete
-    find ./${var.build} -type f -name '*.html' ! -name 'index.html' ! -name '404.html' | while read HTMLFILE; do \
-      echo copying $HTMLFILE to s3://${aws_s3_bucket.b.id}/$(basename $HTMLFILE .html) && \
-      cat $HTMLFILE | aws s3 cp - s3://${aws_s3_bucket.b.id}/$(basename $HTMLFILE .html) --region=${var.region} --content-type "text/html" --cache-control "no-store, no-cache, must-revalidate"; \
+    find ./${var.build} -type f ! -name '*.*' | while read HTMLFILE; do \
+      echo copying $HTMLFILE to s3://${aws_s3_bucket.b.id}/$(basename $HTMLFILE) && \
+      cat $HTMLFILE | aws s3 cp - s3://${aws_s3_bucket.b.id}/$(basename $HTMLFILE) --region=${var.region} --content-type "text/html" --cache-control "no-store, no-cache, must-revalidate"; \
     done;
+    aws s3 sync ${var.build} s3://${aws_s3_bucket.b.id} --region=${var.region} --size-only --delete
     EOF
 
     environment = {
