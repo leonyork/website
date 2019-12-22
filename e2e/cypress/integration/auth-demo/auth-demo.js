@@ -14,12 +14,25 @@ Then(`I can click the {string} button`, (buttonText) => {
   getButton(buttonText).click()
 })
 
+Then(`I can see the text {string}`, (text) => {
+  cy.get(`body`).contains(text).should('be.visible') 
+})
+
 Then(`I can authenticate and authorize`, () => {
   //Login
   cy.get(`input[name="login"]`).type(`a`)
   cy.get(`input[name="password"]`).type(`a`)
   cy.get('form').submit()
   //Authorize
+  cy.get('form').submit()
+})
+
+Then(`I wait for the page to load`, () => {
+  cy.wait(4000)
+})
+
+Then(`I can save the message {string}`, (message) => {
+  cy.get(`input[id="formMessage"]`).type(`{selectall}{backspace}${message}`)
   cy.get('form').submit()
 })
 
