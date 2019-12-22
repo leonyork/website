@@ -38,7 +38,13 @@
 .e2e: .e2e-build
 	docker-compose -f e2e.docker-compose.yml -p leonyork-com-e2e up --force-recreate --abort-on-container-exit --exit-code-from e2e
 
-.test: .unit .integration .e2e
+.e2e-lighthouse-build:
+	docker-compose -f e2e-lighthouse.docker-compose.yml -p leonyork-com-e2e-lighthouse build
+
+.e2e-lighthouse: .e2e-lighthouse-build
+	docker-compose -f e2e-lighthouse.docker-compose.yml -p leonyork-com-e2e-lighthouse up --force-recreate --abort-on-container-exit --exit-code-from e2e
+
+.test: .unit .integration .e2e .e2e-lighthouse
 
 .deploy-build:  
 	docker-compose -f deploy.docker-compose.yml -p leonyork-com-build build deploy

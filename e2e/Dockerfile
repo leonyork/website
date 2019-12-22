@@ -1,6 +1,7 @@
 FROM cypress/included:3.8.0 AS cypress
+RUN npm install -g wait-on@3.3.x
+
 WORKDIR /app
-RUN npm install -g wait-on@3.3.0
 
 FROM cypress AS install
 COPY package.json package-lock.json ./
