@@ -46,7 +46,7 @@ export default function IndexPage(props) {
                     {!accessToken() && jumbo.leadtext && jumbo.leadtext.split(/[\r\n]/).map((line, index) => (
                         <p key={index}>{line}</p>
                     ))}
-                    <div className="mt-3">
+                    <div className="mt-3" id="auth-options">
                         {accessToken() ?
                             <Button variant="primary" onClick={logout}>Logout</Button> :
                             <Button variant="primary" onClick={login}>Login</Button>

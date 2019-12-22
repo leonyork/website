@@ -16,3 +16,14 @@ To deploy you'll need to make sure you have the following environment variables 
 
 AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
+
+## Developing e2e tests
+
+Alongside make, docker and docker-compose you'll need nodejs installed (so you can access the cypress gui)
+
+Run ```make .dev``` so you've got a development environment running
+
+Run the following to start the cypress gui:
+ 1) ```cd e2e```
+ 1) ```npm install```
+ 1) ```npm test```
