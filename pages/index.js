@@ -3,6 +3,9 @@ import Link from "next/link"
 import Jumbotron from "react-bootstrap/Jumbotron"
 import Container from "react-bootstrap/Container"
 import Card from "react-bootstrap/Card"
+import passportImage from "../images/passport.jpg"
+import quantumComputingImage from "../images/quantum-computing.jpg"
+import rayTracingImage from "../images/ray-traced-sphere.jpg"
 
 import Layout from "../components/layout"
 import addCms from "../cms/index-cms"
@@ -47,7 +50,7 @@ function IndexPage(props) {
                 </small>
             </Card.Text>
           </Card.Body>
-          <Card.Img variant="bottom" src={require('../images/passport.jpg')} alt="Passport" style={{ height: "5rem", objectFit: "cover", objectPosition: "50% 50%" }} />
+          <Card.Img variant="bottom" src={passportImage} alt="Passport" style={{ height: "5rem", objectFit: "cover", objectPosition: "50% 50%" }} />
         </Card>
 
         <Card className="mb-3">
@@ -72,7 +75,7 @@ function IndexPage(props) {
               <p>My report can be downloaded as a pdf: <a href={`/projects/quantum-computing/quantum-computing.pdf`}>quantum-computing.pdf</a></p>
             </Card.Text>
           </Card.Body>
-          <Card.Img variant="bottom" src={require('../images/quantum-computing.jpg')} alt="Quantum Computing" style={{ height: "5rem", objectFit: "cover", objectPosition: "left" }} />
+          <Card.Img variant="bottom" src={quantumComputingImage} alt="Quantum Computing" style={{ height: "5rem", objectFit: "cover", objectPosition: "left" }} />
         </Card>
 
         <Card className="mb-3">
@@ -91,7 +94,7 @@ function IndexPage(props) {
               <p>You can view the project on <a href="https://github.com/leonyork/ray-traced-sphere-animation">GitHub</a>.</p>
             </Card.Text>
           </Card.Body>
-          <Card.Img variant="bottom" src={require('../images/ray-traced-sphere.jpg')} alt="Ray Traced Sphere" style={{ "height": "7em", objectFit: "cover", objectPosition: "right" }} />
+          <Card.Img variant="bottom" src={rayTracingImage} alt="Ray Traced Sphere" style={{ "height": "7em", objectFit: "cover", objectPosition: "right" }} />
         </Card>
       </Container>
 

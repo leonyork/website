@@ -1,8 +1,8 @@
-import { useCMS, useCMSForm } from 'react-tinacms'
+import { useCMS, useLocalForm } from 'react-tinacms'
 
 export default function addCms(props) {
   let cms = useCMS()
-  let [jumbo, form] = useCMSForm({
+  let [jumbo, form] = useLocalForm({
     id: props.fileRelativePath, // needs to be unique
     label: 'Edit Jumbo',
 
