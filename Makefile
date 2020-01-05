@@ -8,7 +8,10 @@ DOCKER_COMPOSE_E2E_LIGHTHOUSE=docker-compose -f e2e-lighthouse.docker-compose.ym
 E2E_LIGHTHOUSE=$(DOCKER_COMPOSE_E2E_LIGHTHOUSE) -p leonyork-com-e2e-lighthouse
 
 DOCKER_COMPOSE_DEPLOY=docker-compose -f deploy.docker-compose.yml
-DEPLOY=$(DOCKER_COMPOSE_DEPLOY) -p leonyork-com-deploy
+DEPLOY_PROJECT_NAME=leonyork-com-deploy
+# Argument for -p and PROJECT_NAME environment variable must be the same for deploy to work
+DEPLOY=$(DOCKER_COMPOSE_DEPLOY) -p $(DEPLOY_PROJECT_NAME)
+DEPLOY_RUN=$(DEPLOY) run -e "PROJECT_NAME=$(DEPLOY_PROJECT_NAME)"
 
 SERVICE_AUTH_DEMO_API=services/auth-demo/api
 
@@ -107,19 +110,19 @@ deploy-build: deploy-pull
 # Deploy to AWS
 .PHONY: deploy
 deploy: deploy-build
-	$(DEPLOY) run -e PROJECT_NAME=leonyork-com deploy
+	$(DEPLOY_RUN) deploy
 
 # Remove all the resources created by deploying
 .PHONY: destroy
 destroy:
-	$(DEPLOY) run -e PROJECT_NAME=leonyork-com deploy destroy -auto-approve -input=false -force
+	$(DEPLOY_RUN) deploy destroy -auto-approve -input=false -force
 
 # Validate the terraform files required for the deployment
 .PHONY: deploy-validate
 deploy-validate: deploy-build
-	$(DEPLOY) run --entrypoint /bin/sh deploy -c 'terraform init -input=false -backend=false && terraform validate' 
+	$(DEPLOY_RUN) --entrypoint /bin/sh deploy -c 'terraform init -input=false -backend=false && terraform validate' 
 
 # sh into the container - useful for running commands like import
 .PHONY: deploy-sh
 deploy-sh: deploy-build
-	$(DEPLOY) run -e PROJECT_NAME=leonyork-com --entrypoint /bin/sh deploy
+	$(DEPLOY_RUN) --entrypoint /bin/sh deploy

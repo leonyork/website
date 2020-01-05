@@ -14,7 +14,6 @@ variable "build" {
   default = "out"
 }
 variable "project_name" {
-  default = "leonyork-com-build-deploy"
 }
 
 provider "aws" {
