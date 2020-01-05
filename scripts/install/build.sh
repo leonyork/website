@@ -6,4 +6,4 @@ apk add vips-dev fftw-dev gdal gdal-dev --no-cache --repository http://dl-3.alpi
 
 rm -fR /var/cache/apk/* 
 
-npm install -g yarn
+npm install yarn
