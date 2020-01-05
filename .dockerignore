@@ -32,7 +32,7 @@ Makefile
 README.md
 .gitignore
 .devcontainer.json
-main.tf
+/*.tf
 terraform.tfstate*
 .terraform
 /services

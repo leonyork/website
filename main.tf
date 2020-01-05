@@ -18,11 +18,24 @@ variable "project_name" {
 }
 
 provider "aws" {
-  region = "${var.region}"
-  version = "~> 2.36"
+  region = var.region
+  version = "2.36.0"
+}
+
+provider "local" {
+  version = "1.4.0"
+}
+
+provider "null" {
+  version = "2.1.0"
+}
+
+provider "template" {
+  version = "2.1.0"
 }
 
 terraform {
+  required_version = ">= 0.12.18"
   backend "s3" {
     bucket = "prod-leonyork-com-terraform"
     key    = "terraform.tfstate"
@@ -47,7 +60,7 @@ resource "aws_cloudfront_origin_access_identity" "default" {
 }
 
 resource "aws_s3_bucket_policy" "b" {
-  bucket = "${aws_s3_bucket.b.id}"
+  bucket = aws_s3_bucket.b.id
 
   policy = <<POLICY
 {
@@ -68,7 +81,7 @@ POLICY
 }
 
 resource "aws_acm_certificate" "cert" {
-  domain_name       = "${var.domain}"
+  domain_name       = var.domain
   validation_method = "DNS"
 
   lifecycle {
@@ -77,29 +90,29 @@ resource "aws_acm_certificate" "cert" {
 }
 
 resource "aws_route53_zone" "main" {
-  name = "${var.domain}"
+  name = var.domain
 }
 
 resource "aws_route53_record" "cert_validation" {
-  name    = "${aws_acm_certificate.cert.domain_validation_options.0.resource_record_name}"
-  type    = "${aws_acm_certificate.cert.domain_validation_options.0.resource_record_type}"
-  zone_id = "${aws_route53_zone.main.id}"
-  records = ["${aws_acm_certificate.cert.domain_validation_options.0.resource_record_value}"]
+  name    = aws_acm_certificate.cert.domain_validation_options.0.resource_record_name
+  type    = aws_acm_certificate.cert.domain_validation_options.0.resource_record_type
+  zone_id = aws_route53_zone.main.id
+  records = [aws_acm_certificate.cert.domain_validation_options.0.resource_record_value]
   ttl     = 60
 }
 
 resource "aws_acm_certificate_validation" "cert" {
-  certificate_arn         = "${aws_acm_certificate.cert.arn}"
-  validation_record_fqdns = ["${aws_route53_record.cert_validation.fqdn}"]
+  certificate_arn         = aws_acm_certificate.cert.arn
+  validation_record_fqdns = [aws_route53_record.cert_validation.fqdn]
 }
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name = "${aws_s3_bucket.b.bucket_regional_domain_name}"
-    origin_id = "${local.s3_origin_id}"
+    domain_name = aws_s3_bucket.b.bucket_regional_domain_name
+    origin_id = local.s3_origin_id
 
     s3_origin_config {
-      origin_access_identity = "${aws_cloudfront_origin_access_identity.default.cloudfront_access_identity_path}"
+      origin_access_identity = aws_cloudfront_origin_access_identity.default.cloudfront_access_identity_path
     }
   }
 
@@ -110,7 +123,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "${local.s3_origin_id}"
+    target_origin_id = local.s3_origin_id
 
     forwarded_values {
       query_string = false
@@ -130,7 +143,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     path_pattern     = "/_next/*"
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id = "${local.s3_origin_id}"
+    target_origin_id = local.s3_origin_id
 
     forwarded_values {
       query_string = false
@@ -157,28 +170,28 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn      = "${aws_acm_certificate_validation.cert.certificate_arn}"
+    acm_certificate_arn      = aws_acm_certificate_validation.cert.certificate_arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1"
   }
 
-  aliases = ["${var.domain}"]
+  aliases = [var.domain]
 
   tags = {
       Name    = "${var.stage}-${var.service}"
-      Stage   = "${var.stage}"
-      Service = "${var.service}"
+      Stage   = var.stage
+      Service = var.service
   }
 }
 
 resource "aws_route53_record" "cdn-alias" {
-  zone_id = "${aws_route53_zone.main.zone_id}"
-  name    = "${var.domain}"
+  zone_id = aws_route53_zone.main.zone_id
+  name    = var.domain
   type    = "A"
 
   alias {
-    name                   = "${aws_cloudfront_distribution.s3_distribution.domain_name}"
-    zone_id                = "${aws_cloudfront_distribution.s3_distribution.hosted_zone_id}"
+    name                   = aws_cloudfront_distribution.s3_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
     evaluate_target_health = false
   }
 }
@@ -186,10 +199,10 @@ resource "aws_route53_record" "cdn-alias" {
 #Do this after the s3 distribution is applied so that we ensure we invalidate the distribution without having to recreate
 #TODO: Work out how to destroy this
 resource "null_resource" "remove_and_upload_to_s3" {
-  depends_on = ["aws_cloudfront_distribution.s3_distribution"]
+  depends_on = [aws_cloudfront_distribution.s3_distribution]
   #Ensure we run this build and deploy every time - even if the other resources didn't need to be changed - This is a known hack - see https://www.kecklers.com/terraform-null-resource-execute-every-time/ and https://github.com/hashicorp/terraform/pull/3244
   triggers = {
-      build_number = "${timestamp()}"
+      build_number = timestamp()
   }
 
   # Always sync up index.html and other html files (that will have lost their extension - see Dockerfile) whether the size has changed or not. 
@@ -217,9 +230,9 @@ resource "null_resource" "remove_and_upload_to_s3" {
 
     environment = {
       COGNITO_HOST = "https://${module.auth_demo.cognito_host}"
-      CLIENT_ID = "${module.auth_demo.user_pool_client_id}"
-      REDIRECT_URL = "${local.auth_demo_location}"
-      USER_API_URL = "${module.auth_demo.api_url}"
+      CLIENT_ID = module.auth_demo.user_pool_client_id
+      REDIRECT_URL = local.auth_demo_location
+      USER_API_URL = module.auth_demo.api_url
     }
   }
 }
@@ -227,12 +240,12 @@ resource "null_resource" "remove_and_upload_to_s3" {
 module "auth_demo" {
   source = "./services/auth-demo"
 
-  region = "${var.region}"
-  stage = "${var.stage}"
-  service = "${var.service}"
-  callback_urls = ["${local.auth_demo_location}"]
-  logout_urls = ["${local.auth_demo_location}"]
-  access_control_allow_origin = "${var.domain}"
+  region = var.region
+  stage = var.stage
+  service = var.service
+  callback_urls = [local.auth_demo_location]
+  logout_urls = [local.auth_demo_location]
+  access_control_allow_origin = var.domain
 }
 
 output "user_pool_id" {
