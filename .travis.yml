@@ -3,7 +3,10 @@ language: minimal
 branches:
   only:
     - master
+dist: bionic
 services:
   - docker
 script:
-  - bash scripts/travis.sh
+  - make test
+after_success:
+  - bash scripts/travis-deploy.sh 

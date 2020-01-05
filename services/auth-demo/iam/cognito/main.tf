@@ -10,7 +10,7 @@ resource "aws_cognito_user_pool" "pool" {
 }
 resource "aws_cognito_user_pool_client" "client" {
   name = "${var.stage}-${var.service}"
-  user_pool_id = "${aws_cognito_user_pool.pool.id}"
+  user_pool_id = aws_cognito_user_pool.pool.id
   generate_secret = false
   explicit_auth_flows = ["ADMIN_NO_SRP_AUTH"]
   supported_identity_providers = ["COGNITO"]
@@ -23,5 +23,5 @@ resource "aws_cognito_user_pool_client" "client" {
 
 resource "aws_cognito_user_pool_domain" "pool-domain" {
   domain = "${var.stage}-${var.service}"
-  user_pool_id = "${aws_cognito_user_pool.pool.id}"
+  user_pool_id = aws_cognito_user_pool.pool.id
 }

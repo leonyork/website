@@ -1,14 +1,45 @@
-# Build the dev container
-.dev-build:
-	docker-compose -f dev.docker-compose.yml build
+DOCKER_COMPOSE_DEV=docker-compose -f dev.docker-compose.yml
+DEV=$(DOCKER_COMPOSE_DEV) -p leonyork-com-dev
+
+DOCKER_COMPOSE_E2E=docker-compose -f e2e.docker-compose.yml
+E2E=$(DOCKER_COMPOSE_E2E) -p leonyork-com-e2e
+
+DOCKER_COMPOSE_E2E_LIGHTHOUSE=docker-compose -f e2e-lighthouse.docker-compose.yml
+E2E_LIGHTHOUSE=$(DOCKER_COMPOSE_E2E_LIGHTHOUSE) -p leonyork-com-e2e-lighthouse
+
+DOCKER_COMPOSE_DEPLOY=docker-compose -f deploy.docker-compose.yml
+DEPLOY=$(DOCKER_COMPOSE_DEPLOY) -p leonyork-com-deploy
+
+SERVICE_AUTH_DEMO_API=services/auth-demo/api
+
+# Run the full build
+.PHONY: build
+build:
+	docker-compose build
+
+# Run the application as it would run in prod
+.PHONY: prod
+prod: build
+	docker-compose up
+
+.PHONY: dev-pull
+dev-pull:
+	$(DEV) pull --quiet
+
+# Build the dev container.
+.PHONY: dev-build
+dev-build: dev-pull
+	$(DEV) build
 
 # Remove node_modules
-.dev-clear:
-	docker-compose -f dev.docker-compose.yml down -v
+.PHONY: dev-clear
+dev-clear:
+	$(DEV) down -v
 
 # Command used to create the project initially. Creates a new project and moves it into the current directory
-.init: .dev-build .dev-clear
-	docker-compose -f dev.docker-compose.yml run --rm dev /bin/sh -c \
+.PHONY: init
+init: dev-build dev-clear
+	$(DEV) run --rm dev /bin/sh -c \
 		"echo project name: && \
 		read PROJECT_NAME && \
 		yarn create next-app \$$PROJECT_NAME && \
@@ -19,53 +50,76 @@
 		rm -rf \$$PROJECT_NAME"
 
 # Run the project in development mode - i.e. hot reloading as you change the code.
-.dev: .dev-build
-	docker-compose -f dev.docker-compose.yml up
+.PHONY: dev
+dev: dev-build
+	$(DEV) up
 
 # sh into the dev container - useful for debugging or installing new dependencies (you should do this inside the container rather than on the host)
-.dev-sh: .dev-build
-	docker-compose -f dev.docker-compose.yml run --rm dev /bin/sh
+.PHONY: dev
+dev-sh: dev-build
+	$(DEV) run --rm dev /bin/sh
 
-.unit:
-	make -C services/auth-demo/api .unit
+.PHONY: unit
+unit:
+	make -C $(SERVICE_AUTH_DEMO_API) unit
 
-.integration:
-	make -C services/auth-demo/api .integration
+.PHONY: integration
+integration:
+	make -C $(SERVICE_AUTH_DEMO_API) integration
 
-.e2e-build:
-	docker-compose -f e2e.docker-compose.yml -p leonyork-com-e2e build
+.PHONY: e2e-pull
+e2e-pull:
+	$(E2E) pull --quiet
 
-.e2e: .e2e-build
-	docker-compose -f e2e.docker-compose.yml -p leonyork-com-e2e up --force-recreate --abort-on-container-exit --exit-code-from e2e
+# Build the e2e tests.
+.PHONY: e2e-build
+e2e-build: e2e-pull
+	$(E2E) build e2e
 
-.e2e-lighthouse-build:
-	docker-compose -f e2e-lighthouse.docker-compose.yml -p leonyork-com-e2e-lighthouse build
+.PHONY: e2e
+e2e: e2e-build
+	$(E2E) up --force-recreate --abort-on-container-exit --exit-code-from e2e
 
-.e2e-lighthouse: .e2e-lighthouse-build
-	docker-compose -f e2e-lighthouse.docker-compose.yml -p leonyork-com-e2e-lighthouse up --force-recreate --abort-on-container-exit --exit-code-from e2e
+.PHONY: e2e-lighthouse-pull
+e2e-lighthouse-pull:
+	$(E2E_LIGHTHOUSE) pull --quiet
 
-.test: .unit .integration .e2e .e2e-lighthouse
+# Build the e2e lighthouse tests. 
+.PHONY: e2e-lighthouse-build
+e2e-lighthouse-build: e2e-lighthouse-pull
+	$(E2E_LIGHTHOUSE) build e2e
 
-.deploy-build:  
-	docker-compose -f deploy.docker-compose.yml -p leonyork-com-build build deploy
+.PHONY: e2e-lighthouse
+e2e-lighthouse: e2e-lighthouse-build
+	$(E2E_LIGHTHOUSE) up --force-recreate --abort-on-container-exit --exit-code-from e2e
+
+.PHONY: test
+test: unit integration e2e e2e-lighthouse
+
+.PHONY: deploy-pull
+deploy-pull:  
+	$(DEPLOY) pull --quiet
+
+.PHONY: deploy-build
+deploy-build: deploy-pull
+	$(DEPLOY) build deploy
 
 # Deploy to AWS
-.deploy:
-	PROJECT_NAME=leonyork-com-build docker-compose -f deploy.docker-compose.yml -p leonyork-com-build run deploy
+.PHONY: deploy
+deploy: deploy-build
+	$(DEPLOY) run -e PROJECT_NAME=leonyork-com deploy
 
 # Remove all the resources created by deploying
-.destroy:
-	docker-compose -f deploy.docker-compose.yml run deploy destroy -auto-approve -input=false -force
+.PHONY: destroy
+destroy:
+	$(DEPLOY) run -e PROJECT_NAME=leonyork-com deploy destroy -auto-approve -input=false -force
+
+# Validate the terraform files required for the deployment
+.PHONY: deploy-validate
+deploy-validate: deploy-build
+	$(DEPLOY) run --entrypoint /bin/sh deploy -c 'terraform init -input=false -backend=false && terraform validate' 
 
 # sh into the container - useful for running commands like import
-.deploy-sh:  
-	docker-compose -f deploy.docker-compose.yml -p leonyork-com-build run --entrypoint /bin/sh deploy
-
-
-# Run the full build
-build:
-	docker-compose build
-
-# Run the application as it would run in prod
-.prod: build
-	docker-compose up
+.PHONY: deploy-sh
+deploy-sh: deploy-build
+	$(DEPLOY) run -e PROJECT_NAME=leonyork-com --entrypoint /bin/sh deploy
