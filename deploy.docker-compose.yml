@@ -7,7 +7,7 @@ services:
       dockerfile: deploy.Dockerfile 
       args:
         TERRAFORM_VERSION: ${TERRAFORM_VERSION} #Comes from .env file
-    entrypoint: 'sh -c ''set -eux && terraform init -input=false && terraform $${0} "$$@" -var "project_name=$$PROJECT_NAME" -var "build=out" -var "stage=prod"'''
+    entrypoint: 'sh -c ''set -eux && terraform init -input=false && terraform workspace select production && terraform $${0} "$$@" -var "project_name=$$PROJECT_NAME" -var "build=out" -var "stage=prod"'''
     # Init and apply, specifying the directory to take the files from as /app/out
     command: "apply -input=false -auto-approve"
     working_dir: /app
