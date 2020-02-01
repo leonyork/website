@@ -27,7 +27,7 @@ exports.handler = async (event, context) => {
     }];
     headers[headerNameCSP.toLowerCase()] = [{
       key: headerNameCSP,
-      value: 'default-src \'none\'; script-src \'self\' https://storage.googleapis.com ; connect-src \'self\' https://*.execute-api.us-east-1.amazonaws.com https://prod-leonyork-com-auth-demo.auth.us-east-1.amazoncognito.com https://fonts.googleapis.com https://fonts.gstatic.com ; img-src \'self\' data:; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com ; font-src \'self\' https://fonts.gstatic.com ; manifest-src \'self\'; base-uri \'self\'; form-action \'self\'; frame-ancestors \'none\';',
+      value: 'default-src \'self\'; script-src \'self\' https://storage.googleapis.com ; connect-src \'self\' https://*.execute-api.us-east-1.amazonaws.com https://prod-leonyork-com-auth-demo.auth.us-east-1.amazoncognito.com https://fonts.googleapis.com https://fonts.gstatic.com ; img-src \'self\' data:; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com ; font-src \'self\' https://fonts.gstatic.com ; manifest-src \'self\'; base-uri \'self\'; form-action \'self\'; frame-ancestors \'none\'; prefetch-src \'self\';',
     }];
     headers[headerNameFP.toLowerCase()] = [{
       key: headerNameFP,
