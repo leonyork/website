@@ -27,7 +27,7 @@ dev: dev-build
 # Sh into the development container
 .PHONY: dev-sh
 dev-sh: dev-build
-	$(DEV) run auth-demo-api-dev sh
+	$(DEV) run users-api-dev sh
 
 .PHONY: task-pull
 task-pull:
