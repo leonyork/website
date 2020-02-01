@@ -42,7 +42,7 @@ function IndexPage(props) {
               <p>Along with <a href="https://nextjs.org/">Next JS</a> and <a href="https://tinacms.org">Tina CMS</a> to provide a rapid developer and customer experience</p>
               <p>And, finally: <a href="https://https://serverless.com/">The Serverless Framework</a> and <a href="https://www.terraform.io/">Terraform</a> to deploy to <a href="https://aws.amazon.com">AWS</a> with one command</p>
               <h4>The result?</h4>
-              <p><Link href="auth-demo"><a>A demo</a></Link> and <a href="https://github.com/leonyork/cognito-oauth2-demo">some source code</a></p>
+              <p><Link rel="preload" prefetch href="auth-demo"><a>A demo</a></Link> and <a href="https://github.com/leonyork/cognito-oauth2-demo">some source code</a></p>
               <small> Image below adapted from&nbsp;
                 <a href={"https://unsplash.com/@anniespratt?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge"} title={"Download free do whatever you want high-resolution photos from Annie Spratt"}>
                 Annie Spratt

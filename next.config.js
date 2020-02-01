@@ -9,27 +9,9 @@ const nextConfig = {
         REACT_APP_CLIENT_ID: process.env.REACT_APP_CLIENT_ID,
         REACT_APP_REDIRECT_URL: process.env.REACT_APP_REDIRECT_URL,
         REACT_APP_USER_API_URL: process.env.REACT_APP_USER_API_URL
-    },
-
-    workboxOpts: {
-        globPatterns: ["public/**/*"],
-        globDirectory: ".",
-        modifyURLPrefix: {
-            "public/": "/",
-        },
-        runtimeCaching: [
-            {
-                urlPattern: /^https?.*/,
-                handler: "NetworkFirst",
-                options: {
-                    cacheName: "offlineCache",
-                    expiration: {
-                        maxEntries: 200
-                    }
-                }
-            }
-        ]
     }
+
+    
 }
 
 module.exports = withOffline(withOptimizedImages(withFonts(withCSS(

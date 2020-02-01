@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # Installs all the packages required for building the project - used by Dockerfiles
-apk add --no-cache autoconf automake bash g++ libtool libc6-compat libjpeg-turbo-dev libpng-dev make nasm python
+apk add --no-cache autoconf automake bash g++ libtool libc6-compat libjpeg-turbo-dev libpng-dev make nasm python libwebp libxi mesa-gl gconf
 
 apk add vips-dev fftw-dev gdal gdal-dev --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community --repository http://dl-3.alpinelinux.org/alpine/edge/main
 
