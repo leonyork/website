@@ -58,7 +58,7 @@ services:
       context: ./services/auth-demo/api
       target: node
       args:
-        NODE_VERSION: ${NODE_VERSION-13.6.0}
+        NODE_VERSION: ${NODE_VERSION-13.7.0}
     ports:
       - "3003:3003"
     volumes:

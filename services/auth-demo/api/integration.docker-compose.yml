@@ -4,7 +4,7 @@ services:
     build: 
       context: .
       args:
-        NODE_VERSION: ${NODE_VERSION-13.6.0}
+        NODE_VERSION: ${NODE_VERSION-13.7.0}
         DYNAMODB_HOST: users-dynamodb
         USER_STORE_API_SECURED_ISSUER: http://users-jwks
         USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN: ${USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN-*}
@@ -29,7 +29,7 @@ services:
       context: .
       target: source
       args:
-        NODE_VERSION: ${NODE_VERSION-13.6.0}
+        NODE_VERSION: ${NODE_VERSION-13.7.0}
     command: >
       /bin/sh -c "
         while ! nc -z users-api 3003;
