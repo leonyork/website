@@ -14,6 +14,7 @@ DEPLOY=$(DOCKER_COMPOSE_DEPLOY) -p $(DEPLOY_PROJECT_NAME)
 DEPLOY_RUN=$(DEPLOY) run -e "PROJECT_NAME=$(DEPLOY_PROJECT_NAME)"
 
 SERVICE_AUTH_DEMO_API=services/auth-demo/api
+HEADERS=headers
 
 # Run the full build
 .PHONY: build
@@ -99,6 +100,10 @@ e2e-lighthouse: e2e-lighthouse-build
 .PHONY: test
 test: unit integration e2e e2e-lighthouse
 
+.PHONY: headers-package
+headers-package: 
+	make -C $(HEADERS) package
+
 .PHONY: deploy-pull
 deploy-pull:  
 	$(DEPLOY) pull --quiet
@@ -109,7 +114,7 @@ deploy-build: deploy-pull
 
 # Deploy to AWS
 .PHONY: deploy
-deploy: deploy-build
+deploy: deploy-build headers-package
 	$(DEPLOY_RUN) deploy
 
 # Remove all the resources created by deploying

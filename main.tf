@@ -105,6 +105,16 @@ resource "aws_acm_certificate_validation" "cert" {
   validation_record_fqdns = [aws_route53_record.cert_validation.fqdn]
 }
 
+module "headers" {
+  source = "./headers"
+
+  region = var.region
+  stage = var.stage
+  service = var.service
+
+  filename = "./headers/.serverless/headers.zip"
+}
+
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = aws_s3_bucket.b.bucket_regional_domain_name
@@ -136,6 +146,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     max_ttl                = 0
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
+
+    lambda_function_association {
+      event_type   = "origin-response"
+      lambda_arn   = module.headers.qualified_arn
+      include_body = false
+    }
   }
 
   ordered_cache_behavior {
@@ -158,6 +174,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     max_ttl                = 31536000
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
+
+    lambda_function_association {
+      event_type   = "origin-response"
+      lambda_arn   = module.headers.qualified_arn
+      include_body = false
+    }
   }
   
   price_class = "PriceClass_100"
