@@ -3,61 +3,11 @@ services:
   e2e:
     build:
       context: e2e/lighthouse
-    entrypoint: 
-      - "/bin/bash"
-      - "-c"
-      - >
-        wait-on http://web && 
-        wait-on tcp:auth-demo-iam:3002 &&
-        wait-on tcp:auth-demo-api:3003 &&
-        wait-on tcp:auth-demo-dynamodb:8000 &&
-        $${0} "$$@"
     command: [ "./cmd.sh" ]
     environment: 
-      - URLS=http://web,http://web/auth-demo
+      - URLS=${BASE_URL},${BASE_URL}/auth-demo
       - MIN_PERFORMANCE_SCORE=85
       - MIN_ACCESIBILITY_SCORE=95
-      - MIN_BEST_PRACTICES_SCORE=86
+      - MIN_BEST_PRACTICES_SCORE=100
       - MIN_SEO_SCORE=90
-      - MIN_PWA_SCORE=55
-  web:
-    build: 
-      context: .
-      args:
-        NODE_VERSION: ${NODE_VERSION} #Comes from .env file
-        NGINX_VERSION: ${NGINX_VERSION} #Comes from .env file
-        COGNITO_HOST: http://auth-demo-iam:3002
-        CLIENT_ID: test
-        REDIRECT_URL: http://web/auth-demo
-        USER_API_URL: http://auth-demo-api-dev:3003
-  auth-demo-iam:
-    image: node:${NODE_VERSION}-alpine
-    working_dir: /app
-    volumes:
-      - ./services/auth-demo/iam/test-oidc-provider:/app
-      - auth_demo_iam_node_modules:/app/node_modules
-    entrypoint: >
-      sh -c 'npm install &&
-      $${0} "$$@"'
-    command: "npm start"
-    environment: 
-      - REDIRECT_URL=http://web/auth-demo
-  auth-demo-api:
-    build:
-      context: ./services/auth-demo/api
-      args:
-        NODE_VERSION: ${NODE_VERSION}
-        USERS_TABLE: users
-    environment:
-      - USER_STORE_API_SECURED_ISSUER=http://auth-demo-iam:3002
-      - USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN=http://web
-      - DYNAMODB_HOST=auth-demo-dynamodb
-      - USERS_TABLE=users
-  auth-demo-dynamodb:
-    build:
-      context: ./services/auth-demo/api
-      dockerfile: dynamo.Dockerfile
-      args:
-        TABLE_NAME: users
-volumes:
-  auth_demo_iam_node_modules:
+      - MIN_PWA_SCORE=100

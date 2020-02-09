@@ -1,0 +1,26 @@
+service: website-headers
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+
+functions:
+  headers:
+    handler: src/handlers/origin-response.handler
+    events:
+      - cloudFront:
+          eventType: origin-response
+          origin: production-leonyork-com.s3.amazonaws.com
+
+plugins:
+  - serverless-webpack
+
+#Package individually so that each function is smaller (i.e. tiny bit quicker startup!!!)
+package:
+    individually: true
+
+custom:
+    webpack:
+        includeModules:
+        forceExclude:
+            - aws-sdk

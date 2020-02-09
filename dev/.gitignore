@@ -1,0 +1,6 @@
+.DS_Store
+/.make
+/cognito
+/.terraform*
+/terraform.tfstate*
+

@@ -1,0 +1,53 @@
+version: '3.7'
+services:
+  client-app-dev:
+    build:
+      context: ../packages/client/app
+      dockerfile: build.Dockerfile
+      target: base
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    volumes:
+      - ../packages/client/app:/app
+      - client_app_node_modules:/app/node_modules
+      - client_app_next:/app/.next
+      - client_app_out:/app/out
+      - ~/.gitconfig:/root/.gitconfig
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_COGNITO_HOST=https://${DEV_COGNITO_HOST}
+      - REACT_APP_CLIENT_ID=${DEV_USER_POOL_CLIENT_ID}
+      - REACT_APP_URL=http://localhost:3000
+      - REACT_APP_USER_API_URL=http://localhost:3003
+    command:  ["run", "dev"]
+  auth-demo-api-dev:
+    build:
+      context: ../packages/services/auth-demo/api
+      target: node
+    ports:
+      - "3003:3003"
+    volumes:
+      - ../packages/services/auth-demo/api:/app
+      - auth_demo_api_node_modules:/app/node_modules
+      - auth_demo_api_serverless:/app/.serverless
+      - ~/.gitconfig:/root/.gitconfig
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - NODE_ENV=development
+      - USER_STORE_API_SECURED_ISSUER=${DEV_TOKEN_ISSUER}
+      - USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN=http://localhost:3000
+      - DYNAMODB_HOST=auth-demo-dynamodb-dev
+    command:  ["npm", "run", "offline", "--", "--watch"]
+  auth-demo-dynamodb-dev:
+    build:
+      context: ../packages/services/auth-demo/api
+      dockerfile: dynamo.Dockerfile
+volumes:
+  client_app_node_modules:
+  client_app_next:
+  client_app_out:
+  auth_demo_iam_node_modules:
+  auth_demo_api_node_modules:
+  auth_demo_api_serverless:

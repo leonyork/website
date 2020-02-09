@@ -1,5 +1,30 @@
-DOCKER_COMPOSE_DEV=docker-compose -f dev.docker-compose.yml
-DEV=$(DOCKER_COMPOSE_DEV) -p leonyork-com-dev
+##########################
+# Includes
+##########################
+include dev/Makefile
+RELATIVE_DIR_DEV=./dev/
+
+##########################
+# Versions
+##########################
+ALPINE_VERSION=3.11.3
+
+##########################
+# Variables
+##########################
+STAGE_PRODUCTION=production
+DOMAIN_PRODUCTION=leonyork.com
+MAKE_PRODUCTION_ARGS=STAGE=$(STAGE_PRODUCTION) DOMAIN=$(DOMAIN_PRODUCTION)
+
+STAGE_E2E=e2e
+DOMAIN_E2E=
+MAKE_E2E_ARGS=STAGE=$(STAGE_E2E) DOMAIN=$(DOMAIN_E2E)
+
+##########################
+# Commands
+##########################
+ALPINE=docker run -v $(CURDIR):/app -w /app alpine:$(ALPINE_VERSION)
+USER_NAME=
 
 DOCKER_COMPOSE_E2E=docker-compose -f e2e.docker-compose.yml
 E2E=$(DOCKER_COMPOSE_E2E) -p leonyork-com-e2e
@@ -7,127 +32,96 @@ E2E=$(DOCKER_COMPOSE_E2E) -p leonyork-com-e2e
 DOCKER_COMPOSE_E2E_LIGHTHOUSE=docker-compose -f e2e-lighthouse.docker-compose.yml
 E2E_LIGHTHOUSE=$(DOCKER_COMPOSE_E2E_LIGHTHOUSE) -p leonyork-com-e2e-lighthouse
 
-DOCKER_COMPOSE_DEPLOY=docker-compose -f deploy.docker-compose.yml
-DEPLOY_PROJECT_NAME=leonyork-com-deploy
-# Argument for -p and PROJECT_NAME environment variable must be the same for deploy to work
-DEPLOY=$(DOCKER_COMPOSE_DEPLOY) -p $(DEPLOY_PROJECT_NAME)
-DEPLOY_RUN=$(DEPLOY) run -e "PROJECT_NAME=$(DEPLOY_PROJECT_NAME)"
+##########################
+# Sub-makes
+##########################
+PACKAGES_DIR=packages
 
-SERVICE_AUTH_DEMO_API=services/auth-demo/api
-HEADERS=headers
+##########################
+# External targets
+##########################
 
-# Run the full build
-.PHONY: build
-build:
-	docker-compose build
-
-# Run the application as it would run in prod
-.PHONY: prod
-prod: build
-	docker-compose up
-
-.PHONY: dev-pull
-dev-pull:
-	$(DEV) pull --quiet
-
-# Build the dev container.
-.PHONY: dev-build
-dev-build: dev-pull
-	$(DEV) build
-
-# Remove node_modules
-.PHONY: dev-clear
-dev-clear:
-	$(DEV) down -v
-
-# Command used to create the project initially. Creates a new project and moves it into the current directory
-.PHONY: init
-init: dev-build dev-clear
-	$(DEV) run --rm dev /bin/sh -c \
-		"echo project name: && \
-		read PROJECT_NAME && \
-		yarn create next-app \$$PROJECT_NAME && \
-		echo moving node modules, this could take a while && \
-		mv -f \$$PROJECT_NAME/node_modules/* \$$PROJECT_NAME/node_modules/.[!.]* ./node_modules/ && \
-		cat README.md >> \$$PROJECT_NAME/README.md && \
-		cp -rdf \$$PROJECT_NAME/* \$$PROJECT_NAME/.[!.]* . && \
-		rm -rf \$$PROJECT_NAME"
-
-# Run the project in development mode - i.e. hot reloading as you change the code.
-.PHONY: dev
-dev: dev-build
-	$(DEV) up
-
-# sh into the dev container - useful for debugging or installing new dependencies (you should do this inside the container rather than on the host)
-.PHONY: dev
-dev-sh: dev-build
-	$(DEV) run --rm dev /bin/sh
-
+# Run the unit tests
 .PHONY: unit
 unit:
-	make -C $(SERVICE_AUTH_DEMO_API) unit
+	make -C $(PACKAGES_DIR) unit
 
+# Run the integration tests
 .PHONY: integration
 integration:
-	make -C $(SERVICE_AUTH_DEMO_API) integration
+	make -C $(PACKAGES_DIR) integration
 
-.PHONY: e2e-pull
-e2e-pull:
-	$(E2E) pull --quiet
+# Deploy the infrastructure
+.PHONY: infra
+infra: 
+	make $(MAKE_PRODUCTION_ARGS) -C $(PACKAGES_DIR) infra
+
+# Deploy the apps onto the infrastructure
+.PHONY: deploy
+deploy: 
+	make $(MAKE_PRODUCTION_ARGS) -C $(PACKAGES_DIR) deploy
+
+# Run the end2end tests
+.PHONY: e2e
+e2e: export CYPRESS_baseUrl=https://$(shell make $(MAKE_E2E_ARGS) -C $(PACKAGES_DIR) log-CLIENT_APP_DOMAIN_NAME)
+e2e: e2e-build
+	$(E2E) up --force-recreate --abort-on-container-exit --exit-code-from e2e
+
+# Run the lighthouse end2end tests
+.PHONY: e2e-lighthouse
+e2e-lighthouse: export BASE_URL=https://$(shell make $(MAKE_E2E_ARGS) -C $(PACKAGES_DIR) log-CLIENT_APP_DOMAIN_NAME)
+e2e-lighthouse: e2e-lighthouse-build
+	$(E2E_LIGHTHOUSE) up --force-recreate --abort-on-container-exit --exit-code-from e2e
+
+# Remove all the resources created by deploying
+.PHONY: destroy
+destroy:
+	make $(MAKE_PRODUCTION_ARGS) -C $(PACKAGES_DIR) destroy
+
+##########################
+# Dev targets
+# Also see dev folder
+##########################
+
+# Run the end2end tests
+.PHONY: e2e-deploy
+e2e-deploy:
+	make $(MAKE_E2E_ARGS) -C $(PACKAGES_DIR) infra
+	make $(MAKE_E2E_ARGS) -C $(PACKAGES_DIR) deploy
+
+# Remove all the resources created by deploying
+.PHONY: e2e-destroy
+e2e-destroy:
+	make $(MAKE_E2E_ARGS) -C $(PACKAGES_DIR) destroy
+
+# Run the e2e tests against your dev environment using the gui (assumes you have already run make dev and the dev environment is up)
+.PHONY: e2e-dev
+e2e-dev:
+	make -C e2e test COGNITO_HOST=$(DEV_COGNITO_HOST) CLIENT_ID=$(DEV_USER_POOL_CLIENT_ID)
+
+# Validate the terraform files required for the deployment
+.PHONY: infra-validate
+infra-validate:
+	make -C $(PACKAGES_DIR) infra-validate
+
+##########################
+# Internal targets
+##########################
 
 # Build the e2e tests.
 .PHONY: e2e-build
 e2e-build: e2e-pull
 	$(E2E) build e2e
 
-.PHONY: e2e
-e2e: e2e-build
-	$(E2E) up --force-recreate --abort-on-container-exit --exit-code-from e2e
-
-.PHONY: e2e-lighthouse-pull
-e2e-lighthouse-pull:
-	$(E2E_LIGHTHOUSE) pull --quiet
+.PHONY: e2e-pull
+e2e-pull:
+	$(E2E) pull --quiet
 
 # Build the e2e lighthouse tests. 
 .PHONY: e2e-lighthouse-build
 e2e-lighthouse-build: e2e-lighthouse-pull
 	$(E2E_LIGHTHOUSE) build e2e
 
-.PHONY: e2e-lighthouse
-e2e-lighthouse: e2e-lighthouse-build
-	$(E2E_LIGHTHOUSE) up --force-recreate --abort-on-container-exit --exit-code-from e2e
-
-.PHONY: test
-test: unit integration e2e e2e-lighthouse
-
-.PHONY: headers-package
-headers-package: 
-	make -C $(HEADERS) package
-
-.PHONY: deploy-pull
-deploy-pull:  
-	$(DEPLOY) pull --quiet
-
-.PHONY: deploy-build
-deploy-build: deploy-pull
-	$(DEPLOY) build deploy
-
-# Deploy to AWS
-.PHONY: deploy
-deploy: deploy-build headers-package
-	$(DEPLOY_RUN) deploy
-
-# Remove all the resources created by deploying
-.PHONY: destroy
-destroy:
-	$(DEPLOY_RUN) deploy destroy -auto-approve -input=false -force
-
-# Validate the terraform files required for the deployment
-.PHONY: deploy-validate
-deploy-validate: deploy-build
-	$(DEPLOY_RUN) --entrypoint /bin/sh deploy -c 'terraform init -input=false -backend=false && terraform validate' 
-
-# sh into the container - useful for running commands like import
-.PHONY: deploy-sh
-deploy-sh: deploy-build
-	$(DEPLOY_RUN) --entrypoint /bin/sh deploy
+.PHONY: e2e-lighthouse-pull
+e2e-lighthouse-pull:
+	$(E2E_LIGHTHOUSE) pull --quiet

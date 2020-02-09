@@ -1,0 +1,40 @@
+version: '3.7'
+services:
+  users-api:
+    build: 
+      context: .
+      args:
+        DYNAMODB_HOST: users-dynamodb
+        USER_STORE_API_SECURED_ISSUER: http://users-jwks
+        USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN: ${USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN-*}
+        USERS_TABLE: ${USERS_TABLE-users}
+        STAGE: ${STAGE-production}
+        REGION: ${REGION-us-east-1}
+    environment:
+      - USERS_TABLE=${USERS_TABLE-users}
+      - DYNAMODB_HOST=users-dynamodb
+  users-dynamodb:
+    build:
+      context: .
+      dockerfile: dynamo.Dockerfile
+      args:
+        TABLE_NAME: ${USERS_TABLE-users}
+  users-jwks:
+    build:
+      context: .
+      dockerfile: jwks.Dockerfile
+  users-integration-tests:
+    build: 
+      context: .
+      target: source
+    command: >
+      /bin/sh -c "
+        while ! nc -z users-api 3003;
+        do
+          echo waiting for users api to become available;
+          sleep 1;
+        done;
+        npm run integration;"
+    environment: 
+      - USER_STORE_API_SECURED_TEST_URL=http://users-api:3003
+      - USER_STORE_API_SECURED_ISSUER=http://users-jwks

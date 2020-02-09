@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  client-app-dev:
+    environment: []
+    command: ["install"]
+  auth-demo-api-dev:
+    environment: []
+    command: ["npm", "install"]
+  auth-demo-dynamodb-dev:
+    environment: []
+    entrypoint: ["sh", "-c"]
+    command: ["exit", "0"]

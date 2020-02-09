@@ -7,6 +7,6 @@ dist: bionic
 services:
   - docker
 script:
-  - make test
+  - make unit integration
 after_success:
-  - bash scripts/travis-deploy.sh 
+  - bash travis-deploy.sh 
