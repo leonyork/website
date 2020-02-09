@@ -1,0 +1,4 @@
+version: '3.7'
+services:
+  auth-demo-cognito-dev:
+    command: "-c 'terraform destroy -auto-approve -input=false -force'"

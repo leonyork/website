@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  auth-demo-cognito-dev:
+    image: hashicorp/terraform:0.12.20
+    entrypoint: sh
+    command: "-c 'terraform init -input=false && terraform apply -input=false -auto-approve'"
+    working_dir: /app
+    volumes: 
+      - ./:/app
+      - ../packages/services/auth-demo/iam/cognito:/app/cognito
+    environment: 
+      - AWS_SECRET_KEY_ID=${AWS_ACCESS_KEY_ID?You must set the environment variable AWS_ACCESS_KEY_ID}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY?You must set the environment variable AWS_SECRET_ACCESS_KEY}

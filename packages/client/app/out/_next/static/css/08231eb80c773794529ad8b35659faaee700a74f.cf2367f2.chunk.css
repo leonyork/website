@@ -1,0 +1,48 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic);
+/**
+ * @license
+ * MyFonts Webfont Build ID 3692141, 2018-12-31T10:32:48-0500
+ * 
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are 
+ * explicitly restricted from using the Licensed Webfonts(s).
+ * 
+ * You may obtain a valid license at the URLs below.
+ * 
+ * Webfont: HanleyPro-Slim by District 62 Studio
+ * URL: https://www.myfonts.com/fonts/district-62-studio/hanley-pro/slim/
+ * Copyright: Copyright &#x00A9; 2016 by MEGAN TAMACCIO - DISTRICT 62 STUDIO. All rights reserved.
+ * 
+ * Webfont: HanleyPro-Script by District 62 Studio
+ * URL: https://www.myfonts.com/fonts/district-62-studio/hanley-pro/script/
+ * Copyright: Copyright &#x00A9; 2016 by Megan Tamaccio - District 62 Studio. All rights reserved.
+ * 
+ * 
+ * License: https://www.myfonts.com/viewlicense?type=web&buildid=3692141
+ * Licensed pageviews: 20,000
+ * 
+ * © 2018 MyFonts Inc
+*/
+
+
+/* @import must be at top of file, otherwise CSS will not work */
+
+
+/* Fails to load locally so removing */
+
+
+/* @import url("//hello.myfonts.net/count/385677"); */
+
+@font-face {
+    font-family: 'HanleyPro-Slim';
+    font-display: auto;
+    src: url('/fonts/385677_0_0.eot');
+    src: url('/fonts/385677_0_0.eot?#iefix') format('embedded-opentype'), url('/fonts/385677_0_0.woff2') format('woff2'), url('/fonts/385677_0_0.woff') format('woff'), url('/fonts/385677_0_0.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'HanleyPro-Script';
+    font-display: auto;
+    src: url('/fonts/385677_1_0.eot');
+    src: url('/fonts/385677_1_0.eot?#iefix') format('embedded-opentype'), url('/fonts/385677_1_0.woff2') format('woff2'), url('/fonts/385677_1_0.woff') format('woff'), url('/fonts/385677_1_0.ttf') format('truetype');
+}

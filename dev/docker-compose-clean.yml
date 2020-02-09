@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+  client-app-dev:
+    command: ["uninstall"]
+  auth-demo-api-dev:
+    command: ["npm", "uninstall"]
+  auth-demo-dynamodb-dev:
+    entrypoint: ["sh", "-c"]
+    command: ["exit", "0"]
