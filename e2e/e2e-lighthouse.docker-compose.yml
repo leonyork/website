@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  e2e:
+    image: leonyork/lighthouse-ci:1.10.0-cypress4.0.1
+    environment: 
+      - URLS=${BASE_URL},${BASE_URL}/auth-demo
+      - MIN_PERFORMANCE_SCORE=85
+      - MIN_ACCESIBILITY_SCORE=95
+      - MIN_BEST_PRACTICES_SCORE=100
+      - MIN_SEO_SCORE=90
+      - MIN_PWA_SCORE=100
+    entrypoint: [ "sh", "-c" ]
+    command:
+      - > 
+        echo $$URLS | tr , '\n' | xargs -I % sh -c 'lighthouse-ci % \
+        --performance=$$MIN_PERFORMANCE_SCORE \
+        --pwa=$$MIN_PWA_SCORE \
+        --accessibility=$$MIN_ACCESIBILITY_SCORE \
+        --best-practices=$$MIN_BEST_PRACTICES_SCORE \
+        --seo=$$MIN_SEO_SCORE \
+        || exit 255' || exit 1

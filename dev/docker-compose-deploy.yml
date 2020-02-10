@@ -7,7 +7,7 @@ services:
     working_dir: /app
     volumes: 
       - ./:/app
-      - ../packages/services/auth-demo/iam/cognito:/app/cognito
+      - ../services:/services
     environment: 
       - AWS_SECRET_KEY_ID=${AWS_ACCESS_KEY_ID?You must set the environment variable AWS_ACCESS_KEY_ID}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}

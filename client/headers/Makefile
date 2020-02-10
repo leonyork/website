@@ -14,7 +14,7 @@ dev-sh: dev-build
 	$(DEV) run headers-dev sh
 
 # Package the zip for deployment
-.serverless/headers.zip: src package.json package-lock.json serverless.yml webpack.config.js
+.serverless/headers.zip: src/handlers/origin-response.js package.json package-lock.json serverless.yml webpack.config.js
 	$(DEV) run headers-dev npm run package -- --stage=$(STAGE) --region=$(REGION)
 
 # Build the dev container.

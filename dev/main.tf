@@ -34,7 +34,7 @@ module "cognito_sign_up" {
 }
 
 module "cognito" {
-  source = "./cognito"
+  source = "../services/auth-demo/iam/cognito"
 
   region = var.region
   stage = local.stage

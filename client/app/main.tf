@@ -2,8 +2,6 @@
 locals {
   cert_count = var.domain != "" ? 1 : 0
   s3_origin_id = "${var.stage}-${var.service}-s3OriginId"
-  base_url = "https://${var.domain}"
-  auth_demo_location = "${local.base_url}/auth-demo"
 }
 
 resource "aws_route53_record" "cdn-alias" {
