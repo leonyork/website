@@ -1,8 +1,7 @@
 version: '3.7'
 services:
   e2e:
-    build:
-      context: e2e/
+    build: .
     entrypoint: "cypress run"
     environment: 
       - CYPRESS_baseUrl=${CYPRESS_baseUrl}

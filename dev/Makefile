@@ -26,12 +26,12 @@ dev: export DEV_COGNITO_HOST=$(shell $(DEV_DEPLOY_SH) -c 'terraform output cogni
 dev: export DEV_TOKEN_ISSUER=$(shell $(DEV_DEPLOY_SH) -c 'terraform output token_issuer')
 dev: export DEV_USER_POOL_CLIENT_ID=$(shell $(DEV_DEPLOY_SH) -c 'terraform output user_pool_client_id')
 dev: dev-deploy dev-install
-	$(DEV) up --abort-on-container-exit
+	$(DEV) up --abort-on-container-exit --remove-orphans
 
 .PHONY: dev-clean
 dev-clean:
-	$(DEV_DESTROY) up
-	$(DEV_CLEAN) up
+	$(DEV_DESTROY) up --remove-orphans
+	$(DEV_CLEAN) up --remove-orphans
 	$(DEV) down -v
 
 .PHONY: dev-pull
@@ -45,7 +45,7 @@ dev-build: dev-pull
 
 .PHONY: dev-install
 dev-install: dev-build
-	$(DEV_INSTALL) up
+	$(DEV_INSTALL) up --remove-orphans
 
 .PHONY: dev-cognito-sign-up-package
 dev-cognito-sign-up-package: 
@@ -53,8 +53,8 @@ dev-cognito-sign-up-package:
 
 .PHONY: dev-deploy
 dev-deploy: dev-cognito-sign-up-package
-	$(DEV_DEPLOY) up
+	$(DEV_DEPLOY) up --remove-orphans
 
 .PHONY: dev-destroy
 dev-destroy:
-	$(DEV_DESTROY) up
+	$(DEV_DESTROY) up --remove-orphans
