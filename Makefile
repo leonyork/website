@@ -157,9 +157,12 @@ infra: infra-build .terraform-plan
 	@$(TERRAFORM) apply -auto-approve -input=false .terraform-plan
 
 # Validate the terraform files required for the deployment
+# Removes the .terraform folder as we leave it in a state where the backend hasn't been initialised
 .PHONY: infra-validate
-infra-validate: .terraform
+infra-validate: 
+	@$(TERRAFORM) init -backend=false
 	@$(TERRAFORM) validate
+	$(ALPINE) rm -rf .terraform
 
 # sh into the container - useful for running commands like import
 .PHONY: infra-sh
