@@ -99,7 +99,7 @@ infra-prod:
 # Deploy production apps onto the production infrastructure
 .PHONY: deploy-prod
 deploy-prod: 
-	make $(MAKE_PRODUCTION_ARGS) -C $(PACKAGES_DIR) deploy
+	make $(MAKE_PRODUCTION_ARGS) -C . deploy
 
 # Deploy on to the infra
 # Need to run the deployment of the services before the app deployment (so that we can get URLs of the services to call)

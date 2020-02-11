@@ -22,9 +22,7 @@ elif [ "${TRAVIS_BRANCH}" = "master" ]; then
   make STAGE_E2E=$STAGE e2e-deploy
   make e2e
   make e2e-lighthouse
-  # Destroy the e2e stage in the background while deploying to prod
-  make STAGE_E2E=$STAGE e2e-destroy &
-  PID_DESTROY=$!
+  make STAGE_E2E=$STAGE e2e-destroy
   make infra-prod
   make deploy-prod
   wait $PID_DESTROY
