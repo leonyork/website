@@ -25,7 +25,6 @@ elif [ "${TRAVIS_BRANCH}" = "master" ]; then
   make STAGE_E2E=$STAGE e2e-destroy
   make infra-prod
   make deploy-prod
-  wait $PID_DESTROY
 else
   echo "Error: case not handled"
   exit 1
