@@ -11,6 +11,15 @@ provider:
     USERS_TABLE: ${env:USERS_TABLE, '${self:service}-${opt:stage, self:provider.stage}'}
     USER_STORE_API_SECURED_ISSUER: ${env:USER_STORE_API_SECURED_ISSUER}
     USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN: ${env:USER_STORE_API_ACCESS_CONTROL_ALLOW_ORIGIN}
+  tracing:
+    apiGateway: true
+  usagePlan:
+    quota:
+      limit: 1000
+      period: DAY
+    throttle:
+      burstLimit: 5
+      rateLimit: 3
   iamRoleStatements:
     - Effect: Allow
       Action:
