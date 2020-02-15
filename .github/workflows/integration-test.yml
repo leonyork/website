@@ -1,4 +1,4 @@
-name: Unit tests
+name: Integration tests
 on:
   push:
     branches: [master]
@@ -6,10 +6,10 @@ on:
     types: [opened, edited, synchronize, reopened]
 
 jobs:
-  unit-test:
+  integration-test:
     runs-on: ubuntu-18.04
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
-      - name: Run the unit tests
-        run: make unit
+      - name: Run the integration tests
+        run: make integration
