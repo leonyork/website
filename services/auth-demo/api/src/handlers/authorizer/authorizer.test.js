@@ -36,6 +36,7 @@ describe("authorizer", () => {
                     Resource: "arn:aws:execute-api:us-east-1:random-account-id:random-api-id/dev/*/user/2"
                 }]
             },
+            usageIdentifierKey: "2",
             context: context
         });
     });
