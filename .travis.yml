@@ -6,7 +6,21 @@ branches:
 dist: bionic
 services:
   - docker
-script:
-  - make unit integration
-after_success:
-  - bash travis-deploy.sh 
+jobs:
+  include:
+    - stage: Test
+      script: make unit
+    - stage: Test
+      script: make integration
+    - stage: Test
+      before_install: export STAGE=e2e-$(date +%s%N)
+      install: make STAGE_E2E=$STAGE e2e-deploy
+      script:
+        - make e2e
+        - make e2e-lighthouse
+      after_script: make STAGE_E2E=$STAGE e2e-destroy
+
+    - stage: Deploy
+      deploy: 
+        - make infra-prod
+        - make deploy-prod
