@@ -1,0 +1,15 @@
+name: Check that the previous commit has been linted correctly
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  commit-lint:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+      - name: seferov/pr-lint-action@master
+        run: make commit-lint

@@ -10,6 +10,7 @@ RELATIVE_DIR_DEV=./dev/
 TERRAFORM_VERSION=0.12.20
 AWSCLI_VERSION=1.17.13-alpine3.11.3
 ALPINE_VERSION=3.11.3
+COMMIT_LINT_VERSION=8.3.5
 
 ##########################
 # Variables
@@ -37,21 +38,23 @@ TERRAFORM_DOCKER_RUN_OPTIONS=-v $(CURDIR):/app \
 	-e "AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY)" \
 	-it
 TERRAFORM_DOCKER_IMAGE=hashicorp/terraform:$(TERRAFORM_VERSION)
-TERRAFORM=docker run $(TERRAFORM_DOCKER_RUN_OPTIONS) $(TERRAFORM_DOCKER_IMAGE)
-TERRAFORM_SH=docker run $(TERRAFORM_DOCKER_RUN_OPTIONS) --entrypoint sh $(TERRAFORM_DOCKER_IMAGE)
+TERRAFORM=docker run --rm $(TERRAFORM_DOCKER_RUN_OPTIONS) $(TERRAFORM_DOCKER_IMAGE)
+TERRAFORM_SH=docker run --rm $(TERRAFORM_DOCKER_RUN_OPTIONS) --entrypoint sh $(TERRAFORM_DOCKER_IMAGE)
 TERRAFORM_VARS=-var "stage=$(STAGE)" -var "domain=$(DOMAIN)" -var "region=$(REGION)"
 
-AWS_CLI=docker run \
+AWS_CLI=docker run --rm \
 	-e "AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID)" \
 	-e "AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY)" \
 	leonyork/awscli:$(AWSCLI_VERSION)
 
-ALPINE=docker run -v $(CURDIR):/app -w /app alpine:$(ALPINE_VERSION)
+ALPINE=docker run --rm -v $(CURDIR):/app -w /app alpine:$(ALPINE_VERSION)
 DOCKER_COMPOSE_E2E=docker-compose -f e2e/e2e.docker-compose.yml
 E2E=$(DOCKER_COMPOSE_E2E) -p leonyork-com-e2e
 
 DOCKER_COMPOSE_E2E_LIGHTHOUSE=docker-compose -f e2e/e2e-lighthouse.docker-compose.yml
 E2E_LIGHTHOUSE=$(DOCKER_COMPOSE_E2E_LIGHTHOUSE) -p leonyork-com-e2e-lighthouse
+
+COMMIT_LINT=docker run --rm -v $(CURDIR)/.git:/app/.git -v $(CURDIR)/commitlint.config.js:/app/commitlint.config.js -w /app gtramontina/commitlint:$(COMMIT_LINT_VERSION) --edit
 
 ##########################
 # Terraform outputs
@@ -136,6 +139,12 @@ destroy: .terraform-plan-destroy
 # Dev targets
 # Also see dev folder
 ##########################
+
+# Lint the commits that have been made to ensure they are conventional commits
+.PHONY: commit-lint
+commit-lint:
+	$(COMMIT_LINT)
+
 # Deploy the system ready for the end2end tests
 .PHONY: e2e-deploy
 e2e-deploy:
