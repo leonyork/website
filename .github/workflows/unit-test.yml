@@ -1,0 +1,13 @@
+name: Run the unit tests
+on:
+  pull_request:
+    types: [opened, editited, synchronize, reopened]
+
+jobs:
+  commit-lint:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+      - name: Run the unit tests
+        run: make unit
