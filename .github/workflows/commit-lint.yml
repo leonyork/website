@@ -1,0 +1,15 @@
+name: Check that the previous commit has been linted correctly
+on:
+  pull_request:
+    types: [opened, editited, synchronize, reopened]
+
+jobs:
+  commit-lint:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+        with: 
+          fetch-depth: 0 
+      - name: Lint the commit
+        run: make COMMIT_LINT_VARS='--from "${{ github.event.pull_request.base.sha }}" --to "${{ github.event.pull_request.head.sha }}"' commit-lint
