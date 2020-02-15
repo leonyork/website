@@ -2,7 +2,6 @@
 
 const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
-const util = require('util');
 
 const createPolicy = (event, context, principalId, effect) => {
     const allowedMethodArnComponents = event.methodArn.split("/").slice(0, -1);
@@ -19,6 +18,7 @@ const createPolicy = (event, context, principalId, effect) => {
                 Resource: allowedMethodArnComponents.join("/")
             }]
         },
+        usageIdentifierKey: principalId,
         context: context
     };
     console.log(JSON.stringify(policy));

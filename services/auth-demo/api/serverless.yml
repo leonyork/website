@@ -7,6 +7,9 @@ provider:
   name: aws
   runtime: nodejs12.x
   memorySize: 128
+  reservedConcurrency: 1
+  timeout: 3
+  logRetentionInDays: 14
   environment:
     USERS_TABLE: ${env:USERS_TABLE, '${self:service}-${opt:stage, self:provider.stage}'}
     USER_STORE_API_SECURED_ISSUER: ${env:USER_STORE_API_SECURED_ISSUER}
@@ -39,6 +42,8 @@ package:
 functions:
   - get:
       handler: src/handlers/user/get.handler
+      timeout: 3
+      memorySize: 128
       events:
         - http: 
             method: get 
@@ -52,6 +57,8 @@ functions:
               allowCredentials: false
   - put:
       handler: src/handlers/user/put.handler
+      timeout: 3
+      memorySize: 128
       events:
         - http: 
             method: put
