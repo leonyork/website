@@ -18,9 +18,10 @@ jobs:
       script:
         - make e2e
         - make e2e-lighthouse
-      after_script: make STAGE_E2E=$STAGE e2e-destroy
+      after_success: make STAGE_E2E=$STAGE e2e-destroy
+      after_failure: make STAGE_E2E=$STAGE e2e-destroy
 
     - stage: Deploy
-      deploy: 
+      script: 
         - make infra-prod
         - make deploy-prod
