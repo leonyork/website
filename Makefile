@@ -63,6 +63,7 @@ COMMIT_LINT=docker run --rm -v $(CURDIR)/.git:/app/.git -v $(CURDIR)/commitlint.
 # Need to be run in shell
 ##########################
 COGNITO_HOST=$(TERRAFORM) output cognito_host
+USER_POOL_ID=$(TERRAFORM) output user_pool_id
 CLIENT_ID=$(TERRAFORM) output user_pool_client_id
 TOKEN_ISSUER=$(TERRAFORM) output token_issuer
 AUTH_DEMO_TABLE_NAME=$(TERRAFORM) output auth_demo_table_name
@@ -156,7 +157,16 @@ e2e-deploy:
 
 .PHONY: e2e-dev
 e2e-dev:
-	make -C e2e test COGNITO_HOST=$(shell $(DEV_DEPLOY_SH) -c 'terraform output cognito_host') CLIENT_ID=$(shell $(DEV_DEPLOY_SH) -c 'terraform output user_pool_client_id')
+	make -C e2e test USER_POOL_ID=$(shell $(DEV_DEPLOY_SH) -c 'terraform output user_pool_id') COGNITO_HOST=$(shell $(DEV_DEPLOY_SH) -c 'terraform output cognito_host') CLIENT_ID=$(shell $(DEV_DEPLOY_SH) -c 'terraform output user_pool_client_id')
+
+.PHONY: e2e-dev-ci
+e2e-dev-ci:
+	make -C e2e test-ci USER_POOL_ID=$(shell $(DEV_DEPLOY_SH) -c 'terraform output user_pool_id') COGNITO_HOST=$(shell $(DEV_DEPLOY_SH) -c 'terraform output cognito_host') CLIENT_ID=$(shell $(DEV_DEPLOY_SH) -c 'terraform output user_pool_client_id')
+
+.PHONY: create-user
+create-user:
+	$(AWS_CLI) cognito-idp sign-up --region $(REGION) --client-id $(shell $(CLIENT_ID)) --username admin2@example.com --password Passw0rd!
+	$(AWS_CLI) cognito-idp admin-confirm-sign-up --region $(REGION) --user-pool-id $(shell $(USER_POOL_ID)) --username admin2@example.com
 
 # Remove all the resources created by deploying the system for e2e tests
 .PHONY: e2e-destroy

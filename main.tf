@@ -59,6 +59,9 @@ module "client" {
   headers_deploy_zip = "./client/headers/.serverless/headers.zip"
 }
 
+output "user_pool_id" {
+  value = module.auth_demo.user_pool_id
+}
 output "user_pool_client_id" {
   value = module.auth_demo.user_pool_client_id
 }

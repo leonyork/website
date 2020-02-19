@@ -36,12 +36,8 @@ Then(`I can see the text {string}`, (text) => {
   cy.get(`body`).contains(text).should('be.visible') 
 })
 
-Then(`I can signup as user {string} with password {string}`, (username, password) => {
-  cy.signup(username, password)
-})
-
-Then(`I can authorize`, () => {
-  cy.authorize()
+Then(`I can login as user {string} with password {string}`, (username, password) => {
+  cy.login(username, password)
 })
 
 Then(`I wait for the page to load`, () => {

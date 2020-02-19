@@ -11,7 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "cypress": "^4.0.1",
-    "cypress-cucumber-preprocessor": "^2.0.1"
+    "cypress-cucumber-preprocessor": "^2.0.1",
+    "micro": "^9.3.4",
+    "puppeteer": "^2.1.1",
+    "puppeteer-core": "^2.1.1"
   },
   "cypress-cucumber-preprocessor": {
     "nonGlobalStepDefinitions": true
