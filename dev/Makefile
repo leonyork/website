@@ -16,8 +16,6 @@ DEV_INSTALL=$(DOCKER_COMPOSE_DEV_INSTALL) -p $(DEV_PROJECT_NAME)
 DEV_CLEAN=$(DOCKER_COMPOSE_DEV_CLEAN) -p $(DEV_PROJECT_NAME)
 DEV_DESTROY=$(DOCKER_COMPOSE_DEV_DESTROY) -p $(DEV_PROJECT_NAME)
 
-DEV_COGNITO_SIGNUP=$(RELATIVE_DIR_DEV)cognito-sign-up
-
 DEV_DEPLOY_SH=$(DEV_DEPLOY) run auth-demo-cognito-dev
 
 # Run the project in development mode - i.e. hot reloading as you change the code.
@@ -47,12 +45,8 @@ dev-build: dev-pull
 dev-install: dev-build
 	$(DEV_INSTALL) up --remove-orphans
 
-.PHONY: dev-cognito-sign-up-package
-dev-cognito-sign-up-package: 
-	make -C $(DEV_COGNITO_SIGNUP) package
-
 .PHONY: dev-deploy
-dev-deploy: dev-cognito-sign-up-package
+dev-deploy:
 	$(DEV_DEPLOY) up --remove-orphans
 
 .PHONY: dev-destroy

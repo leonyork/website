@@ -7,9 +7,6 @@ resource "aws_cognito_user_pool" "pool" {
     require_symbols = false
     require_uppercase = false
   }
-  lambda_config {
-    pre_sign_up = var.pre_sign_up_lambda_arn
-  }
 }
 resource "aws_cognito_user_pool_client" "client" {
   name = "${var.stage}-${var.service}"

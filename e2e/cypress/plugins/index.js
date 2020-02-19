@@ -13,12 +13,15 @@ const cucumber = require('cypress-cucumber-preprocessor').default
 const micro = require("micro");
 const puppeteer = require("puppeteer");
 const url = require("url");
+
+const AWS = require('aws-sdk');
  
 module.exports = async (on, config) => {
   console.log(config)
   config.env = {
     ...config.env,
-    ...{"iam_host": process.env.COGNITO_HOST,
+    ...{"region": process.env.REGION,
+    "iam_host": process.env.COGNITO_HOST,
     "iam_response_type": "token",
     "iam_scope": "openid",
     "iam_redirect_uri": process.env.REDIRECT_URL,
@@ -29,6 +32,22 @@ module.exports = async (on, config) => {
   console.log(config.env)
 
   on('file:preprocessor', cucumber())
+
+  //Create a user to use for the test
+  const cognito = new AWS.CognitoIdentityServiceProvider({"region": config.env.region})
+  const username = 'test@test.com'
+  cognito.adminDeleteUser({"UserPoolId": config.env.iam_user_pool_id, "Username": username}, (err, data) => {
+    console.log(err)
+    console.log(data)
+    cognito.signUp({"ClientId": config.env.iam_client_id, "Username": username, "Password": "Passw0rd!"}, (err, data) => {
+      console.log(err)
+      console.log(data)
+      cognito.adminConfirmSignUp({"UserPoolId": config.env.iam_user_pool_id, "Username": username}, (err, data) => {
+        console.log(err)
+        console.log(data)
+      })
+    })
+  })
 
   /**
    * See https://stackoverflow.com/questions/51208998/how-to-login-in-auth0-in-an-e2e-test-with-cypress

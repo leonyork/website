@@ -16,7 +16,3 @@ variable "callback_urls" {
 variable "logout_urls" {
   type = list(string)
 }
-variable "pre_sign_up_lambda_arn" {
-  type = string
-  default = ""
-}
