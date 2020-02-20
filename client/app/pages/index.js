@@ -19,7 +19,7 @@ function IndexPage(props) {
     <Layout>
       <Jumbotron className={styles.jumbo}>
         <Container>
-          <h1 className={styles.header}>{jumbo.title}</h1>
+          <h1 className={styles.heading}>{jumbo.title}</h1>
           <hr className="my-4" />
           <p className="lead">{jumbo.lead}</p>
           {jumbo.leadtext.split(/[\r\n]/).map((line, index) => (
@@ -28,7 +28,7 @@ function IndexPage(props) {
         </Container>
       </Jumbotron>
       <Container id="projects">
-        <h1 className={styles.header}>Projects</h1>
+        <h1 className={styles.heading}>Projects</h1>
 
 
         <Card className="mb-3">
