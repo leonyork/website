@@ -5,12 +5,14 @@ import Container from "react-bootstrap/Container"
 
 import Layout from "../layout"
 
+import styles from "./layout.module.css"
+
 const LayoutAuthDemo = (props) => {
     return (
         <Layout>
-            <Jumbotron style={{ paddingTop: "1.5em", paddingBottom: "4em" }}>
+            <Jumbotron className={styles.jumbo}>
                 <Container>
-                    <h1 style={{ fontFamily: "HanleyPro-Slim" }}>{props.title}</h1>
+                    <h1 className={styles.heading}>{props.title}</h1>
                     <hr className="my-4" />
                     {props.lead && <p className="lead">{props.lead}</p>}
                     {props.leadtext}

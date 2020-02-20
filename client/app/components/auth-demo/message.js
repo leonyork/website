@@ -4,7 +4,9 @@ import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"
 import Card from "react-bootstrap/Card"
 
-import { Transition } from 'react-transition-group';
+import { Transition } from "react-transition-group"
+
+import styles from "./message.module.css"
 
 export default class Message extends Component {
 
@@ -13,7 +15,7 @@ export default class Message extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            sub: "",
+            sub: undefined,
             message: this.props.defaultMessage || this.defaultMessage,
             messageLoaded: false
         };
@@ -74,29 +76,18 @@ export default class Message extends Component {
     }
 
     render() {
-        const defaultStyle = {
-            transition: `opacity 500ms ease-in-out`,
-            opacity: 0,
-        }
-
-        const transitionStyles = {
-            entering: { opacity: 1 },
-            entered: { opacity: 1 },
-            exiting: { opacity: 0 },
-            exited: { opacity: 0 },
-        };
         return (
             <>
                 <Transition in={this.state.messageLoaded} timeout={500}>
                     {state => (
-                        <div style={{ ...defaultStyle, ...transitionStyles[state] }}>
+                        <div className={styles[state]}>
                             <h2>{this.state.message}</h2>
                         </div>
                     )}
                 </Transition>
                 <Transition in={this.state.sub !== undefined} timeout={500}>
                     {state => (
-                        <div style={{ ...defaultStyle, ...transitionStyles[state] }}>
+                        <div className={styles[state]}>
                             <p>Your user id is {this.state.sub}</p>
                         </div>
                     )}
@@ -104,7 +95,7 @@ export default class Message extends Component {
 
                 <Transition in={this.state.messageLoaded} timeout={500}>
                     {state => (
-                        <Card style={{ ...defaultStyle, ...transitionStyles[state] }}>
+                        <Card className={styles[state]}>
                             <Card.Header>Your welcome message</Card.Header>
                             <Card.Body>
                                 <Form onSubmit={this.handleSubmit}>

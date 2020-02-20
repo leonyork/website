@@ -16,12 +16,17 @@ deploy: docker-deployer-build out
 	$(DEPLOY) run $(DEPLOY_SERVICE)
 
 #############################
-# Test commands
+# Dev commands
 #############################
 
 # Synonym for building the client app
 .PHONY: build
 build: out;
+
+# Synonym for building the client app
+.PHONY: sh
+sh: 
+	$(BUILD) run --entrypoint sh $(BUILD_SERVICE)
 
 #############################
 # Internal targets

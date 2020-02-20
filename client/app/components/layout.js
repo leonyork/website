@@ -43,6 +43,8 @@ const Layout = (props) => {
         <meta name="msapplication-square150x150logo" content="/favicon/mstile-150x150.png" />
         <meta name="msapplication-wide310x150logo" content="/favicon/mstile-310x150.png" />
         <meta name="msapplication-square310x310logo" content="/favicon/mstile-310x310.png" />
+
+        <link rel="preconnect" href="https://fonts.gstatic.com"></link>
       </Head>
       <Header />
       <main>{props.children}</main>

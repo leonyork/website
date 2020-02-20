@@ -1,0 +1,31 @@
+.logo {
+    font-family: "HanleyPro-Script";
+    font-size: 3em !important;
+    margin-top: -0.3em !important;
+    margin-bottom: -0.3em !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.toggle {
+    margin-bottom: -0.3em !important;
+    margin-top: -0.3em !important;
+}
+
+.navbar { 
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-bottom: -1em !important;
+    margin-top: -1em !important;
+}
+
+.nav {
+    font-family: "HanleyPro-Slim";
+    margin-top: 0.8em !important;
+}
+
+.navlinksvg {
+    display: "inline-block";
+    width: 2rem;
+    height: 2rem;
+}

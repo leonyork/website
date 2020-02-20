@@ -1,0 +1,20 @@
+.entered {
+    transition: opacity 500ms ease-in-out;
+    opacity: 1;
+}
+.entering {
+    transition: opacity 500ms ease-in-out;
+    opacity: 1;
+}
+
+.exited {
+    transition: opacity 500ms ease-in-out;
+    opacity: 0;
+}
+.exiting {
+    transition: opacity 500ms ease-in-out;
+    opacity: 0;
+}
+.test {
+    font-size: 10rem;
+}

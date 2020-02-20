@@ -163,11 +163,6 @@ e2e-dev:
 e2e-dev-ci:
 	make -C e2e test-ci USER_POOL_ID=$(shell $(DEV_DEPLOY_SH) -c 'terraform output user_pool_id') COGNITO_HOST=$(shell $(DEV_DEPLOY_SH) -c 'terraform output cognito_host') CLIENT_ID=$(shell $(DEV_DEPLOY_SH) -c 'terraform output user_pool_client_id')
 
-.PHONY: create-user
-create-user:
-	$(AWS_CLI) cognito-idp sign-up --region $(REGION) --client-id $(shell $(CLIENT_ID)) --username admin2@example.com --password Passw0rd!
-	$(AWS_CLI) cognito-idp admin-confirm-sign-up --region $(REGION) --user-pool-id $(shell $(USER_POOL_ID)) --username admin2@example.com
-
 # Remove all the resources created by deploying the system for e2e tests
 .PHONY: e2e-destroy
 e2e-destroy:

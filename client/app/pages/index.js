@@ -10,14 +10,16 @@ import rayTracingImage from "../images/ray-traced-sphere.jpg"
 import Layout from "../components/layout"
 import addCms from "../cms/index-cms"
 
+import styles from "./index.module.css"
+
 function IndexPage(props) {
   let jumbo = addCms(props)
 
   return (
     <Layout>
-      <Jumbotron style={{ paddingTop: "1.5em", paddingBottom: "4em" }}>
+      <Jumbotron className={styles.jumbo}>
         <Container>
-          <h1 style={{ fontFamily: "HanleyPro-Slim" }}>{jumbo.title}</h1>
+          <h1 className={styles.header}>{jumbo.title}</h1>
           <hr className="my-4" />
           <p className="lead">{jumbo.lead}</p>
           {jumbo.leadtext.split(/[\r\n]/).map((line, index) => (
@@ -26,7 +28,7 @@ function IndexPage(props) {
         </Container>
       </Jumbotron>
       <Container id="projects">
-        <h1 style={{ fontFamily: "HanleyPro-Slim" }}>Projects</h1>
+        <h1 className={styles.header}>Projects</h1>
 
 
         <Card className="mb-3">
@@ -50,7 +52,7 @@ function IndexPage(props) {
                 </small>
             </Card.Text>
           </Card.Body>
-          <Card.Img variant="bottom" src={passportImage} alt="Passport" style={{ height: "5rem", objectFit: "cover", objectPosition: "50% 50%" }} />
+          <Card.Img variant="bottom" src={passportImage} alt="Passport" className={styles.cardimgmiddle} />
         </Card>
 
         <Card className="mb-3">
@@ -75,7 +77,7 @@ function IndexPage(props) {
               <p>My report can be downloaded as a pdf: <a href={`/projects/quantum-computing/quantum-computing.pdf`}>quantum-computing.pdf</a></p>
             </Card.Text>
           </Card.Body>
-          <Card.Img variant="bottom" src={quantumComputingImage} alt="Quantum Computing" style={{ height: "5rem", objectFit: "cover", objectPosition: "left" }} />
+          <Card.Img variant="bottom" src={quantumComputingImage} alt="Quantum Computing" className={styles.cardimgleft} />
         </Card>
 
         <Card className="mb-3">
@@ -94,14 +96,14 @@ function IndexPage(props) {
               <p>You can view the project on <a href="https://github.com/leonyork/ray-traced-sphere-animation">GitHub</a>.</p>
             </Card.Text>
           </Card.Body>
-          <Card.Img variant="bottom" src={rayTracingImage} alt="Ray Traced Sphere" style={{ "height": "7em", objectFit: "cover", objectPosition: "right" }} />
+          <Card.Img variant="bottom" src={rayTracingImage} alt="Ray Traced Sphere" className={styles.cardimgright} />
         </Card>
       </Container>
 
       <Container id="links">
         <div className="card">
           <div className="card-body">
-            <h1 className="card-title" style={{ fontFamily: "HanleyPro-Slim" }}>Links</h1>
+            <h1 className="card-title" className={styles.heading}>Links</h1>
             <ul>
               <li><a href="http://www.alzheimers.org.uk/about-dementia/types-dementia/alzheimers-disease-symptoms">Never
               forget</a> - Spot the symptoms of Alzheimers early
