@@ -9,8 +9,6 @@ import React from "react"
 import Head from "next/head"
 
 import Header from "./header"
-import "./fonts.css"
-import "./bootstrap.css"
 
 const Layout = (props) => {
 

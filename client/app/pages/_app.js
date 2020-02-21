@@ -3,6 +3,9 @@ import App from 'next/app'
 import { Tina, TinaCMS } from 'tinacms'
 import { GitClient } from '@tinacms/git-client'
 
+import "./fonts.css"
+import "./bootstrap.css"
+
 class MyApp extends App {
   constructor() {
     super()

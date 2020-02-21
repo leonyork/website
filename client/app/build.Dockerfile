@@ -17,14 +17,14 @@ COPY . .
 
 # Stop Tina being loaded in production
 RUN \
-  rm pages/_app.js && \
+  mv -f pages/_app.production.js pages/_app.js  && \
   for i in ./cms/*.production.js; do mv -f $i ./cms/`basename $i .production.js`.js; done; \
   for i in ./cms/auth-demo/*.production.js; do mv -f $i ./cms/auth-demo/`basename $i .production.js`.js; done;
 
 RUN echo $'#!/usr/bin/env sh \n\
 yarn build \n\
 yarn run next export \n\
-find ./out -type f -name '*.html' ! -name 'index.html' ! -name '404.html' | while read HTMLFILE; do \
+find ./out -type f -name "*.html" ! -name "index.html" ! -name "404.html" | while read HTMLFILE; do \
   mv $HTMLFILE $(dirname $HTMLFILE)/$(basename $HTMLFILE .html); \
 done' > /sbin/build && chmod +x /sbin/build
 

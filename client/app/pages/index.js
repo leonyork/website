@@ -3,9 +3,9 @@ import Link from "next/link"
 import Jumbotron from "react-bootstrap/Jumbotron"
 import Container from "react-bootstrap/Container"
 import Card from "react-bootstrap/Card"
-import passportImage from "../images/passport.jpg"
-import quantumComputingImage from "../images/quantum-computing.jpg"
-import rayTracingImage from "../images/ray-traced-sphere.jpg"
+import passportImage from "../images/passport.jpg?resize&sizes[]=300&sizes[]=600&sizes[]=1000&sizes[]=2000"
+import quantumComputingImage from "../images/quantum-computing.jpg?resize&sizes[]=300&sizes[]=600&sizes[]=1000&sizes[]=2000"
+import rayTracingImage from "../images/ray-traced-sphere.jpg?resize&sizes[]=300&sizes[]=600&sizes[]=1000&sizes[]=2000"
 
 import Layout from "../components/layout"
 import addCms from "../cms/index-cms"
@@ -52,7 +52,7 @@ function IndexPage(props) {
                 </small>
             </Card.Text>
           </Card.Body>
-          <Card.Img variant="bottom" src={passportImage} alt="Passport" className={styles.cardimgmiddle} />
+          <Card.Img variant="bottom" srcSet={passportImage.srcSet} src={passportImage.src} alt="Passport" className={styles.cardimgmiddle} />
         </Card>
 
         <Card className="mb-3">
@@ -77,7 +77,7 @@ function IndexPage(props) {
               <p>My report can be downloaded as a pdf: <a href={`/projects/quantum-computing/quantum-computing.pdf`}>quantum-computing.pdf</a></p>
             </Card.Text>
           </Card.Body>
-          <Card.Img variant="bottom" src={quantumComputingImage} alt="Quantum Computing" className={styles.cardimgleft} />
+          <Card.Img variant="bottom" srcSet={quantumComputingImage.srcSet} src={quantumComputingImage.src} alt="Quantum Computing" className={styles.cardimgleft} />
         </Card>
 
         <Card className="mb-3">
@@ -96,7 +96,7 @@ function IndexPage(props) {
               <p>You can view the project on <a href="https://github.com/leonyork/ray-traced-sphere-animation">GitHub</a>.</p>
             </Card.Text>
           </Card.Body>
-          <Card.Img variant="bottom" src={rayTracingImage} alt="Ray Traced Sphere" className={styles.cardimgright} />
+          <Card.Img variant="bottom" srcSet={rayTracingImage.srcSet} src={rayTracingImage.src} alt="Ray Traced Sphere" className={styles.cardimgright} />
         </Card>
       </Container>
 
