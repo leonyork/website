@@ -1,11 +1,13 @@
-sudo: required
-language: minimal
+os: linux
+dist: bionic
+language: shell
+services:
+  - docker
+
 branches:
   only:
     - master
-dist: bionic
-services:
-  - docker
+
 jobs:
   include:
     - stage: Test
