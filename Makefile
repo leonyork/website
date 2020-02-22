@@ -54,6 +54,10 @@ E2E=$(DOCKER_COMPOSE_E2E) -p leonyork-com-e2e
 DOCKER_COMPOSE_E2E_LIGHTHOUSE=docker-compose -f e2e/e2e-lighthouse.docker-compose.yml
 E2E_LIGHTHOUSE=$(DOCKER_COMPOSE_E2E_LIGHTHOUSE) -p leonyork-com-e2e-lighthouse
 
+DOCKER_COMPOSE_E2E_OBSERVATORY=docker-compose -f e2e/e2e-observatory.docker-compose.yml
+E2E_OBSERVATORY=$(DOCKER_COMPOSE_E2E_OBSERVATORY) -p leonyork-com-e2e-observatory
+
+
 COMMIT_LINT_DOCKER_IMAGE=gtramontina/commitlint:$(COMMIT_LINT_VERSION) 
 COMMIT_LINT_VARS=--edit
 COMMIT_LINT=docker run --rm -v $(CURDIR)/.git:/app/.git -v $(CURDIR)/commitlint.config.js:/app/commitlint.config.js -w /app $(COMMIT_LINT_DOCKER_IMAGE) $(COMMIT_LINT_VARS)
@@ -116,6 +120,9 @@ deploy: services-deploy
 # Run the end2end tests
 .PHONY: e2e
 e2e: export CYPRESS_baseUrl=https://$(shell $(CLIENT_APP_DOMAIN_NAME))
+e2e: export E2E_USER_POOL_ID=$(shell $(USER_POOL_ID))
+e2e: export E2E_COGNITO_HOST=$(shell $(COGNITO_HOST))
+e2e: export E2E_CLIENT_ID=$(shell $(CLIENT_ID))
 e2e: e2e-build
 	$(E2E) up --remove-orphans --force-recreate --abort-on-container-exit --exit-code-from e2e
 
@@ -124,6 +131,13 @@ e2e: e2e-build
 e2e-lighthouse: export BASE_URL=https://$(shell $(CLIENT_APP_DOMAIN_NAME))
 e2e-lighthouse: e2e-lighthouse-pull
 	$(E2E_LIGHTHOUSE) up --remove-orphans --force-recreate --abort-on-container-exit --exit-code-from e2e
+
+# Run the observatory end2end tests
+.PHONY: e2e-observatory
+e2e-observatory: export BASE_URL=$(shell $(CLIENT_APP_DOMAIN_NAME))
+e2e-observatory: e2e-observatory-pull
+	$(E2E_OBSERVATORY) up --remove-orphans --force-recreate --abort-on-container-exit --exit-code-from e2e
+
 
 .PHONY: destroy-prod
 destroy-prod:
@@ -268,3 +282,7 @@ e2e-pull:
 .PHONY: e2e-lighthouse-pull
 e2e-lighthouse-pull:
 	$(E2E_LIGHTHOUSE) pull --quiet
+
+.PHONY: e2e-observatory-pull
+e2e-observatory-pull:
+	$(E2E_OBSERVATORY) pull --quiet

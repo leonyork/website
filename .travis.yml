@@ -18,6 +18,7 @@ jobs:
       script:
         - make e2e
         - make e2e-lighthouse
+        - make e2e-observatory
       after_success: make STAGE_E2E=$STAGE e2e-destroy
       after_failure: make STAGE_E2E=$STAGE e2e-destroy
 

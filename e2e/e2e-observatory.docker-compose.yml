@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  e2e:
+    image: mozilla/observatory-cli
+    environment: 
+      - URLS=${BASE_URL}
+      - MIN_SCORE=115
+    entrypoint: [ "sh", "-c" ]
+    command:
+      - > 
+        echo $$URLS | tr , '\n' | xargs -I % sh -c 'observatory % \
+        --min-score=$$MIN_SCORE --zero --format report --rescan \
+        || exit 255' || exit 1
