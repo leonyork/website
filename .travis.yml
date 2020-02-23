@@ -15,7 +15,7 @@ jobs:
     - stage: Test
       script: make integration
     - stage: Test
-      before_install: export STAGE=e2e-$(date +%s%N)
+      before_install: export STAGE=e2e-$TRAVIS_BRANCH
       install: make STAGE_E2E=$STAGE e2e-deploy
       script:
         - make e2e

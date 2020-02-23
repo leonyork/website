@@ -6,6 +6,9 @@ BUILD_SERVICE=client-app-build
 DEPLOY=docker-compose -f deploy.docker-compose.yml -p $(DOCKER_COMPOSE_PROJECT)
 DEPLOY_SERVICE=client-app-deploy
 
+DESTROY=docker-compose -f destroy.docker-compose.yml -p $(DOCKER_COMPOSE_PROJECT)
+DESTROY_SERVICE=client-app-destroy
+
 #############################
 # External targets
 #############################
@@ -14,6 +17,12 @@ DEPLOY_SERVICE=client-app-deploy
 .PHONY: deploy
 deploy: docker-deployer-build out
 	$(DEPLOY) run $(DEPLOY_SERVICE)
+
+
+# Destroy the client app
+.PHONY: destroy
+destroy: docker-destroyer-build
+	$(DESTROY) run $(DESTROY_SERVICE)
 
 #############################
 # Dev commands
@@ -45,6 +54,11 @@ docker-builder-build:
 .PHONY: docker-deployer-build
 docker-deployer-build:
 	$(DEPLOY) build
+
+# Build the destroyer image
+.PHONY: docker-destroyer-build
+docker-destroyer-build:
+	$(DESTROY) build
 
 # Command used to create the project initially. Creates a new project and moves it into the current directory
 .PHONY: init

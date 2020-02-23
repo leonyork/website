@@ -10,6 +10,11 @@ infra-build: headers-package;
 app-deploy:
 	make REACT_APP_USER_API_URL=$(AUTH_DEMO_API_URL) REACT_APP_URL=https://$(DOMAIN) REACT_APP_CLIENT_ID=$(CLIENT_ID) REACT_APP_COGNITO_HOST=https://$(COGNITO_HOST) -C $(APP_DIR) deploy
 
+# Destroy the client app
+.PHONY: app-destroy
+app-destroy:
+	make -C $(APP_DIR) destroy
+
 # Package the headers
 .PHONY: headers-package
 headers-package: 

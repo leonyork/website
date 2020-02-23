@@ -145,12 +145,11 @@ destroy-prod:
 
 # Only need to destroy the services as the front end will be taken care of by destroying the infrastructure
 .PHONY: destroy
-destroy: .terraform-plan-destroy
+destroy: destroy-client destroy-services .terraform-plan-destroy
 	@$(TERRAFORM) apply -auto-approve -input=false .terraform-plan-destroy
 	@$(TERRAFORM) destroy -auto-approve -input=false -force
 	@$(TERRAFORM) workspace select default
 	@$(TERRAFORM) workspace delete $(STAGE)
-	make -C $(SERVICES_DIR) destroy
 
 ##########################
 # Dev targets
@@ -178,9 +177,19 @@ e2e-dev-ci:
 	make -C e2e test-ci USER_POOL_ID=$(shell $(DEV_DEPLOY_SH) -c 'terraform output user_pool_id') COGNITO_HOST=$(shell $(DEV_DEPLOY_SH) -c 'terraform output cognito_host') CLIENT_ID=$(shell $(DEV_DEPLOY_SH) -c 'terraform output user_pool_client_id')
 
 # Remove all the resources created by deploying the system for e2e tests
+# As an optimisation, don't destroy the main infrastructure as it takes too long to provision
 .PHONY: e2e-destroy
 e2e-destroy:
-	make $(MAKE_E2E_ARGS) -C . destroy
+	make $(MAKE_E2E_ARGS) -C . destroy-client
+	make $(MAKE_E2E_ARGS) -C . destroy-services
+
+.PHONY: destroy-client
+destroy-client:
+	make S3_BUCKET_ID=$(shell $(S3_BUCKET_ID)) -C $(CLIENT_DIR) app-destroy
+
+.PHONY: destroy-services
+destroy-services:
+	make -C $(SERVICES_DIR) destroy
 
 # Deploy the infrastructure
 .PHONY: infra
