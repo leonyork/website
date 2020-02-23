@@ -5,6 +5,11 @@ HEADERS_DIR=headers
 .PHONY: infra-build
 infra-build: headers-package;
 
+# Build things required for deployment
+.PHONY: build
+build:
+	make -C $(APP_DIR) build
+
 # Deploy the client app
 .PHONY: app-deploy
 app-deploy:

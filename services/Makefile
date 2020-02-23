@@ -12,6 +12,11 @@ unit: auth-demo-unit;
 .PHONY: integration
 integration: auth-demo-integration;
 
+# Build things required for deployment
+.PHONY: build
+build: 
+	make -C $(AUTH_DEMO_DIR) build
+
 # Need to run the deployment of the services before the app deployment (so that we can get URLs of the services to call)
 .PHONY: deploy
 deploy:

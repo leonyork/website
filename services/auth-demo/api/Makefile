@@ -27,6 +27,10 @@ unit: task-build
 integration: integration-build
 	$(INTEGRATION) up --force-recreate --abort-on-container-exit --exit-code-from users-integration-tests
 
+# Build things required for deployment
+.PHONY: build
+build: deploy-build;
+
 # Deploy to AWS
 .PHONY: deploy
 deploy: deploy-build

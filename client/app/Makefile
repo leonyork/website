@@ -13,11 +13,14 @@ DESTROY_SERVICE=client-app-destroy
 # External targets
 #############################
 
+# Build things required for deployment
+.PHONY: build
+build: docker-builder-build;
+
 # Deploy the client app
 .PHONY: deploy
 deploy: docker-deployer-build out
 	$(DEPLOY) run $(DEPLOY_SERVICE)
-
 
 # Destroy the client app
 .PHONY: destroy
@@ -27,10 +30,6 @@ destroy: docker-destroyer-build
 #############################
 # Dev commands
 #############################
-
-# Synonym for building the client app
-.PHONY: build
-build: out;
 
 # Synonym for building the client app
 .PHONY: sh

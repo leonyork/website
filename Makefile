@@ -101,6 +101,10 @@ unit: services-unit;
 .PHONY: integration
 integration: services-integration;
 
+# Run the builds (things required for deployment)	
+.PHONY: build
+build: services-build client-build;	
+
 # Deploy the production infrastructure to production
 .PHONY: infra-prod
 infra-prod: 
@@ -253,6 +257,14 @@ services-integration:
 .PHONY: infra-build
 infra-build:
 	make -C $(CLIENT_DIR) infra-build
+
+.PHONY: services-build
+services-build:
+	make -C $(SERVICES_DIR) build
+
+.PHONY: client-build
+client-build:
+	make -C $(CLIENT_DIR) build
 
 .PHONY: .terraform-plan # Always init again as we could have changed environment variables
 .terraform: 

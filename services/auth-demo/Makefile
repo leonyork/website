@@ -12,6 +12,10 @@ unit: api-unit;
 .PHONY: integration
 integration: api-integration;
 
+# Build things required for deployment
+.PHONY: build
+build: api-build;
+
 # Deploy to AWS
 .PHONY: deploy
 deploy: api-deploy;
@@ -31,6 +35,10 @@ api-unit:
 .PHONY: api-integration
 api-integration: 
 	make -C $(API_DIR) integration
+
+.PHONY: api-build
+api-build: 
+	make -C $(API_DIR) build
 
 .PHONY: api-deploy
 api-deploy: 
