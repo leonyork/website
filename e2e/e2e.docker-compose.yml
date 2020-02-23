@@ -16,5 +16,3 @@ services:
     cap_add:
       - SYS_ADMIN
     init: true
-    volumes:
-      - ./ss:/ss
