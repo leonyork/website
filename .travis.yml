@@ -16,15 +16,13 @@ jobs:
       script: make integration
     - stage: Test
       before_install: export STAGE=e2e-$TRAVIS_BRANCH
-      install: make STAGE_E2E=$STAGE e2e-deploy
+      install: make -j4 STAGE_E2E=$STAGE e2e-deploy e2e-build
       script:
-        - make e2e
-        - make e2e-lighthouse
-        - make e2e-observatory
+        - make -j3 e2e e2e-lighthouse e2e-observatory
       after_success: make STAGE_E2E=$STAGE e2e-destroy
       after_failure: make STAGE_E2E=$STAGE e2e-destroy
 
     - stage: Deploy
       script: 
         - make infra-prod
-        - make deploy-prod
+        - make -j4 deploy-prod
