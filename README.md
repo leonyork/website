@@ -30,3 +30,7 @@ Alongside make, docker and docker-compose you'll need nodejs installed (so you c
 Run ```make dev``` so you've got a development environment running.
 
 Run ```make e2e-dev``` to run the cypress gui.
+
+## Architecture
+
+[![Architecture](documentation/architecture.svg)](https://cloudcraft.co/view/5d971eaa-9a71-42f3-8e1e-5ba0f7be081c?key=MeWxkwzm3m6slGSeIqZuAQ)
