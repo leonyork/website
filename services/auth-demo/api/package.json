@@ -18,16 +18,16 @@
         "create-cert": "^1.0.6",
         "jest": "^25.1.0",
         "jwk-to-pem": "^2.0.3",
-        "serverless": "^1.62.0",
-        "serverless-dotenv-plugin": "^2.1.1",
+        "serverless": "^1.64.0",
+        "serverless-dotenv-plugin": "^2.3.2",
         "serverless-offline": "^5.12.1",
         "serverless-webpack": "^5.3.1",
         "supertest": "^4.0.2",
         "tree-kill": "^1.2.2",
-        "webpack": "^4.41.5"
+        "webpack": "^4.41.6"
     },
     "dependencies": {
         "acorn": "^7.1.0",
-        "jwks-rsa": "^1.6.2"
+        "jwks-rsa": "^1.7.0"
     }
 }
