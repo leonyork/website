@@ -5,4 +5,16 @@ services:
     entrypoint: "cypress run"
     environment: 
       - CYPRESS_baseUrl=${CYPRESS_baseUrl}
+      - REGION=${REGION}
+      - COGNITO_HOST=${E2E_COGNITO_HOST}
+      - REDIRECT_URL=${CYPRESS_baseUrl}/auth-demo
+      - CLIENT_ID=${E2E_CLIENT_ID}
+      - USER_POOL_ID=${E2E_USER_POOL_ID}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     command: ["--browser", "chrome", "-e", "TAGS=not @ignore"]
+    cap_add:
+      - SYS_ADMIN
+    init: true
+    volumes:
+      - ./ss:/ss

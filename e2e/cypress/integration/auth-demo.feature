@@ -4,7 +4,6 @@ Feature: Auth Demo Page
     Background:
         Given I visit the auth-demo page
 
-    @ignore
     Scenario: Login, save a message and check it's still there when I go back to the page
         Then I see the "Login" button
         And The "Login" button links to the IAM login page

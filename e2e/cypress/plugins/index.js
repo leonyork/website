@@ -36,33 +36,60 @@ module.exports = async (on, config) => {
   //Create a user to use for the test
   const cognito = new AWS.CognitoIdentityServiceProvider({"region": config.env.region})
   const username = 'test@test.com'
-  cognito.adminDeleteUser({"UserPoolId": config.env.iam_user_pool_id, "Username": username}, (err, data) => {
+  console.log(`Creating user with username ${username}`)
+  try {
+    console.log("delete user...")
+    const response = await cognito.adminDeleteUser({"UserPoolId": config.env.iam_user_pool_id, "Username": username}).promise()
+    console.log(response)
+  } catch (err) {
     console.log(err)
-    console.log(data)
-    cognito.signUp({"ClientId": config.env.iam_client_id, "Username": username, "Password": "Passw0rd!"}, (err, data) => {
-      console.log(err)
-      console.log(data)
-      cognito.adminConfirmSignUp({"UserPoolId": config.env.iam_user_pool_id, "Username": username}, (err, data) => {
-        console.log(err)
-        console.log(data)
-      })
-    })
-  })
+  }
+
+  try {
+    console.log("signup...")
+    let response = await cognito.signUp({"ClientId": config.env.iam_client_id, "Username": username, "Password": "Passw0rd!"}).promise()
+    console.log(response)
+    console.log("confirm...")
+    response = await cognito.adminConfirmSignUp({"UserPoolId": config.env.iam_user_pool_id, "Username": username}).promise()
+    console.log(response)
+  } catch (err) {
+    console.log(err)
+  }
 
   /**
    * See https://stackoverflow.com/questions/51208998/how-to-login-in-auth0-in-an-e2e-test-with-cypress
    */
   const login = async (username, password) => {
-    const browser = await puppeteer.launch({ headless: true })
+    const browser = await puppeteer.launch({
+      args: [
+          '--disable-gpu',
+          '--disable-dev-shm-usage',
+          '--disable-setuid-sandbox',
+          '--no-first-run',
+          '--no-zygote',
+          '--no-sandbox',
+          '--single-process',
+          '--headless',
+          '--test-type'
+      ],
+    })
     const page = await browser.newPage()
     await page.goto(`https://${config.env.iam_host}/oauth2/authorize?response_type=${config.env.iam_response_type}&scope=${config.env.iam_scope}&client_id=${config.env.iam_client_id}&redirect_uri=${config.env.iam_redirect_uri}`)
     await page.waitFor("input#signInFormUsername")
     await page.waitFor("input.btn.btn-primary.submitButton-customizable")
     await page.type("input#signInFormUsername", username)
+    console.log("Typed username")
     await page.type("input#signInFormPassword", password)
-    await page.click("input.btn.btn-primary.submitButton-customizable").then(() => page.waitForNavigation({ waitUntil: 'load' }))
+    console.log("Typed password")
+    await Promise.all([
+      page.waitForNavigation({waitUntil: 'networkidle0'}),
+      page.click("input.btn.btn-primary.submitButton-customizable")
+     ])
+    console.log("Submitted login")
+    const url = await page.url()
     await browser.close()
-    return page.url()
+    console.log(`Redirected to url ${url}`)
+    return url
   }
   const server = micro(async (req, res) => {
       // expect request Url of form `http://localhost:3005?username=blahblah&password=blahblah
