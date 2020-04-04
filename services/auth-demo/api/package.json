@@ -27,7 +27,7 @@
         "webpack": "^4.41.6"
     },
     "dependencies": {
-        "acorn": "^7.1.0",
+        "acorn": "^7.1.1",
         "jwks-rsa": "^1.7.0"
     }
 }
