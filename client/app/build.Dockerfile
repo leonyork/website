@@ -1,7 +1,7 @@
 # Creates an image that can be used for building the client app. Since there are multiple variables (e.g. Cognito urls)
 # that are needed for the build, we create a builder image rather than a traditional archive. These variables are passed
 # in as environment variables when running the build
-FROM leonyork/yarn-front-end-builder:1.0.0-yarn1.21.1-node13.8.0-alpine3.11 AS base
+FROM leonyork/yarn-front-end-builder:1.0.0-yarn1.22.4-node13.12.0-alpine3.11 AS base
   
 WORKDIR /app
 

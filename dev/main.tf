@@ -3,10 +3,10 @@ variable "region" {
 }
 provider "aws" {
   region = var.region
-  version = "2.47.0"
+  version = "2.57.0"
 }
 provider "random" {
-  version = "2.2"
+  version = "2.2.1"
 }
 terraform {
   required_version = ">= 0.12.18"

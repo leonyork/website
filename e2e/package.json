@@ -10,11 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.622.0",
-    "cypress": "^4.0.1",
-    "cypress-cucumber-preprocessor": "^2.0.1",
+    "aws-sdk": "^2.656.0",
+    "cypress": "^4.3.0",
+    "cypress-cucumber-preprocessor": "^2.3.0",
     "micro": "^9.3.4",
-    "puppeteer": "^2.0.0"
+    "puppeteer": "^2.1.1"
   },
   "cypress-cucumber-preprocessor": {
     "nonGlobalStepDefinitions": true

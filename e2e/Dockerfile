@@ -1,4 +1,4 @@
-FROM cypress/included:4.0.1 AS cypress
+FROM cypress/included:4.3.0 AS cypress
 WORKDIR /app
 
 FROM cypress AS install

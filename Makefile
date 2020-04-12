@@ -7,9 +7,9 @@ RELATIVE_DIR_DEV=./dev/
 ##########################
 # Versions
 ##########################
-TERRAFORM_VERSION=0.12.20
-AWSCLI_VERSION=1.17.13-alpine3.11.3
-ALPINE_VERSION=3.11.3
+TERRAFORM_VERSION=0.12.24
+AWSCLI_VERSION=1.18.39-alpine3.11.5
+ALPINE_VERSION=3.11.5
 COMMIT_LINT_VERSION=8.3.5
 
 ##########################

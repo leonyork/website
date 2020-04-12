@@ -1,4 +1,4 @@
-FROM node:13.8.0-alpine AS jose
+FROM node:13.12.0-alpine3.11 AS jose
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ ENV AWS_ACCESS_KEY_ID=dummy
 ENV AWS_SECRET_ACCESS_KEY=dummy
 ARG TABLE_NAME=auth-demo-users-dev
 
-FROM nginx:1.17.8-alpine
+FROM nginx:1.17.9-alpine
 
 RUN \
   rm -rf /usr/share/nginx/html/* && \
