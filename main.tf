@@ -16,7 +16,7 @@ variable "build" {
 
 provider "aws" {
   region = var.region
-  version = "2.57.0"
+  version = "2.59.0"
 }
 
 terraform {

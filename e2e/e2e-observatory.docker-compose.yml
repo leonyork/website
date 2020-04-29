@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   e2e:
-    image: mozilla/observatory-cli
+    image: mozilla/observatory-cli #https://hub.docker.com/r/mozilla/observatory-cli
     environment: 
       - URLS=${BASE_URL}
       - MIN_SCORE=115

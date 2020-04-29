@@ -7,10 +7,10 @@ RELATIVE_DIR_DEV=./dev/
 ##########################
 # Versions
 ##########################
-TERRAFORM_VERSION=0.12.24
-AWSCLI_VERSION=1.18.39-alpine3.11.5
-ALPINE_VERSION=3.11.5
-COMMIT_LINT_VERSION=8.3.5
+TERRAFORM_VERSION=0.12.24 #https://hub.docker.com/r/hashicorp/terraform
+AWSCLI_VERSION=1.18.48-alpine3.11.5 #https://hub.docker.com/repository/docker/leonyork/awscli/tags
+ALPINE_VERSION=3.11.6 #https://hub.docker.com/repository/docker/leonyork/awscli/tags
+COMMIT_LINT_VERSION=8.3.5 #https://www.npmjs.com/package/commitlint
 
 ##########################
 # Variables
