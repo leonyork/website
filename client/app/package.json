@@ -8,7 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@types/node": "^12.12.21",
+    "@types/node": "^12.12.37",
     "@webdeb/next-styles": "^1.0.5",
     "file-loader": "^5.0.2",
     "image-trace-loader": "^1.0.2",
