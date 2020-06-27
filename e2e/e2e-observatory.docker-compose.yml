@@ -9,5 +9,5 @@ services:
     command:
       - > 
         echo $$URLS | tr , '\n' | xargs -I % sh -c 'observatory % \
-        --min-score=$$MIN_SCORE --zero --format report --rescan \
+        --min-score=$$MIN_SCORE --zero --format report --rescan --attempts 100 \
         || exit 255' || exit 1
