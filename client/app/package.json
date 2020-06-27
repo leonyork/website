@@ -31,7 +31,7 @@
     "replace-in-file": "^5.0.2",
     "responsive-loader": "^1.2.0",
     "styled-components": ">=4.1",
-    "svg-sprite-loader": "^4.1.6",
+    "svg-sprite-loader": "^4.2.7",
     "typescript": "^3.7.4",
     "url-loader": "^3.0.0",
     "webp-loader": "^0.6.0",
