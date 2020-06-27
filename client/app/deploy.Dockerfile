@@ -1,4 +1,4 @@
-FROM leonyork/awscli:1.18.39-alpine3.11.5
+FROM leonyork/awscli:1.18.89-alpine3.12.0
 
 COPY deploy.sh /sbin/deploy
 RUN chmod +x /sbin/deploy

@@ -1,5 +1,6 @@
 ARG DB_LOCATION=/home/dynamodblocal/db
-FROM amazon/dynamodb-local:1.12.0 AS install
+# https://hub.docker.com/r/amazon/dynamodb-local
+FROM amazon/dynamodb-local:1.13.1 AS install
 
 USER root
 RUN yum -y install awscli
@@ -19,7 +20,8 @@ RUN mkdir -p ${DB_LOCATION} && \
         --endpoint-url http://localhost:8000 --region us-east-1 && \
     kill $DYNAMO_PID
 
-FROM amazon/dynamodb-local:1.12.0
+# https://hub.docker.com/r/amazon/dynamodb-local
+FROM amazon/dynamodb-local:1.13.1
 
 ARG DB_LOCATION
 COPY --chown=dynamodblocal:dynamodblocal --from=install ${DB_LOCATION} /db

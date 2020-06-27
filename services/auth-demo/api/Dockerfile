@@ -1,4 +1,5 @@
-FROM node:13.12.0-alpine3.11 AS node
+# https://hub.docker.com/_/node
+FROM node:14.4.0-alpine3.12 AS node
 
 WORKDIR /app
 

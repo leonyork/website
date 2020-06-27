@@ -1,4 +1,5 @@
-FROM node:13.12.0-alpine3.11 AS jose
+# https://hub.docker.com/_/node
+FROM node:14.4.0-alpine3.12 AS jose
 
 WORKDIR /app
 
@@ -14,7 +15,7 @@ ENV AWS_ACCESS_KEY_ID=dummy
 ENV AWS_SECRET_ACCESS_KEY=dummy
 ARG TABLE_NAME=auth-demo-users-dev
 
-FROM nginx:1.17.9-alpine
+FROM nginx:1.19.0-alpine
 
 RUN \
   rm -rf /usr/share/nginx/html/* && \

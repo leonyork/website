@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   e2e:
-    image: leonyork/lighthouse-ci:1.10.0-cypress4.5.0
+    image: leonyork/lighthouse-ci:1.10.0-cypress4.9.0
     environment: 
       - URLS=${BASE_URL},${BASE_URL}/auth-demo
       - MIN_PERFORMANCE_SCORE=85

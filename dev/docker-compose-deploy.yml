@@ -1,7 +1,8 @@
 version: '3.7'
 services:
   auth-demo-cognito-dev:
-    image: hashicorp/terraform:0.12.24
+    # https://hub.docker.com/r/hashicorp/terraform
+    image: hashicorp/terraform:0.12.28
     entrypoint: sh
     command: "-c 'terraform init -input=false && terraform apply -input=false -auto-approve'"
     working_dir: /app

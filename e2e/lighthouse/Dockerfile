@@ -1,4 +1,5 @@
-FROM cypress/included:3.8.0
+# https://hub.docker.com/r/cypress/included
+FROM cypress/included:4.9.0
 RUN npm install -g wait-on@3.3.x
 
 WORKDIR /app
