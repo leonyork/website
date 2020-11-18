@@ -35,8 +35,8 @@
     "typescript": "^3.7.4",
     "url-loader": "^3.0.0",
     "webp-loader": "^0.6.0",
-    "webpack": "^4.41.5",
-    "webpack-cli": "*"
+    "webpack": "^5.1.1",
+    "webpack-cli": "4.0.0"
   },
   "devDependencies": {
     "@tinacms/api-git": "^0.5.0",
