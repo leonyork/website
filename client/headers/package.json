@@ -16,6 +16,6 @@
         "serverless-webpack": "^5.3.1"
     },
     "dependencies": {
-        "webpack": "^4.41.5"
+        "webpack": "^4.43.0"
     }
 }
