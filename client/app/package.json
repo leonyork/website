@@ -18,7 +18,7 @@
     "imagemin-svgo": "^7.0.0",
     "jimp": "^0.9.3",
     "lqip-loader": "^2.2.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "next": "^9.3.4",
     "next-fonts": "^0.19.0",
     "next-offline": "^5.0.0",
