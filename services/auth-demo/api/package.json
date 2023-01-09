@@ -20,7 +20,7 @@
         "jwk-to-pem": "^2.0.3",
         "serverless": "^1.69.0",
         "serverless-dotenv-plugin": "^2.4.2",
-        "serverless-offline": "^5.12.1",
+        "serverless-offline": "^12.0.4",
         "serverless-webpack": "^5.3.1",
         "supertest": "^4.0.2",
         "tree-kill": "^1.2.2",
