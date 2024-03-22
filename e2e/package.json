@@ -12,7 +12,7 @@
   "dependencies": {
     "aws-sdk": "^2.656.0",
     "cypress": "^4.5.0",
-    "cypress-cucumber-preprocessor": "^2.3.0",
+    "cypress-cucumber-preprocessor": "^3.0.0",
     "micro": "^9.3.4",
     "puppeteer": "^2.1.1"
   },
